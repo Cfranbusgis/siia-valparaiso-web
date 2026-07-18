@@ -1,10 +1,10 @@
-"""Climatologia de precipitacion 1-17 de julio para Valparaiso, desde el modelo.
+"""Climatologia de precipitacion 1-18 de julio para Valparaiso, desde el modelo.
 
 Fuente: rasters diarios del modelo ETo del usuario
   MOD_EToPM-HS/03_inputs/ERA5/PM_daily_YYYY.tif  (bandas '..._P_mm_d', mm/dia,
   ERA5-Land, 10 km, EPSG:32719, AOI Region de Valparaiso), anhos 2003-2023.
 
-Para cada celda calcula la suma de precipitacion del 1 al 17 de julio en cada
+Para cada celda calcula la suma de precipitacion del 1 al 18 de julio en cada
 anho y de ahi la media y desviacion climatologica. Guarda:
   clim_valpo.npz  (mean, std, n, lon, lat, valid, transform)
   clim_valpo.csv  (row,col,lon,lat,clim_mean_mm,clim_std_mm,n_years)
@@ -26,7 +26,7 @@ ERA5 = config.ERA5_DIR
 AOI = config.AOI_SHP
 OUT = config.WORK_DIR
 YEARS = range(2003, 2024)          # 2003-2023
-DAY_MIN, DAY_MAX = 1, 17           # ventana 1-17 julio
+DAY_MIN, DAY_MAX = 1, 18           # ventana 1-18 julio (18 completo; reciente corta 09:00)
 
 
 def july_precip_bands(src) -> list[int]:

@@ -18,9 +18,7 @@ HERE = config.WORK_DIR
 R = json.loads((HERE / "resumen_valpo.json").read_text(encoding="utf-8"))
 T = json.loads((HERE / "resumen_topo.json").read_text(encoding="utf-8"))
 
-TOPO_COM = [("Viña del Mar", 0.735), ("Puchuncaví", 0.729), ("Papudo", 0.723),
-            ("Zapallar", 0.720), ("La Ligua", 0.694), ("Valparaíso", 0.682),
-            ("Casablanca", 0.681), ("Quilpué", 0.674)]
+TOPO_COM = list(T["top_comunas_expo_comp"].items())
 
 # Escala de rios atmosfericos (Ralph et al., 2019, BAMS): categoria, nombre,
 # umbral de IVT maximo (kg m-1 s-1) e impacto predominante.
@@ -47,12 +45,14 @@ def es(x: float, d: int = 1) -> str:
     return s.replace(",", "§").replace(".", ",").replace("§", ".")
 
 
-# ---- serie diaria ----
+# ---- serie diaria (el 18 es parcial: 00:00-09:00) ----
 TL = R["serie_diaria_mm_media"]
+TL_MAX = max(TL.values())
 tl_rows = "".join(
-    f'<tr class="{ "hit" if v>20 else "" }"><td>{int(d[8:10])}</td>'
+    f'<tr class="{ "hit" if v>20 else "" }">'
+    f'<td>{int(d[8:10])}{"*" if d == "2026-07-18" else ""}</td>'
     f'<td class="num">{es(v,1)}</td>'
-    f'<td class="bar"><span style="width:{min(100, v/107.8*100):.0f}%"></span></td></tr>'
+    f'<td class="bar"><span style="width:{min(100, v/TL_MAX*100):.0f}%"></span></td></tr>'
     for d, v in TL.items())
 
 # ---- observaciones DMC/DGAC ----
@@ -78,13 +78,11 @@ model_rows = "".join(
     f'<td class="num strong">{es(s,1)}</td></tr>' for m, a, b, s in MODELS)
 
 # ---- comunas ----
-COMUNAS = [("Papudo", 446), ("La Ligua", 411), ("Zapallar", 392),
-           ("Puchuncaví", 367), ("Concón", 353), ("Valparaíso", 350),
-           ("Viña del Mar", 346), ("Petorca", 338), ("Quilpué", 333),
-           ("Villa Alemana", 324)]
+COMUNAS = [(n, int(p)) for n, p in R["top_comunas"].items()]
+COM_MAX = max(p for _, p in COMUNAS)
 comuna_rows = "".join(
     f'<tr><td>{n}</td><td class="num">+{p} %</td>'
-    f'<td class="bar"><span style="width:{p/446*100:.0f}%"></span></td></tr>'
+    f'<td class="bar"><span style="width:{p/COM_MAX*100:.0f}%"></span></td></tr>'
     for n, p in COMUNAS)
 
 topo_com_rows = "".join(
@@ -217,36 +215,38 @@ HTML = f"""<div class="wrap">
 <header class="masthead">
   <div class="eyebrow">Sistema Regional de Inteligencia Ambiental &middot; Región de Valparaíso</div>
   <h1>Anomalía de precipitación durante un sistema frontal asociado a un río atmosférico</h1>
-  <p class="kicker">Análisis científico del evento hidrometeorológico del 1 al 17 de julio de
-  2026 &middot; Evaluación de 2.916 humedales del inventario regional</p>
+  <p class="kicker">Análisis científico del evento hidrometeorológico del 1 al 18 de julio de
+  2026 (corte 09:00) &middot; Evaluación de 2.916 humedales del inventario regional</p>
 </header>
 
-<p class="lead">Durante los días 16 y 17 de julio de 2026, un sistema frontal asociado a un
+<p class="lead">Entre el 16 y el 18 de julio de 2026, un sistema frontal asociado a un
 río atmosférico afectó una extensa franja de Chile central y centro-sur. El
 fenómeno transportó una elevada cantidad de humedad desde el océano Pacífico y
 generó precipitaciones intensas en distintas zonas del país.</p>
 <p>Este sistema no evalúa la extensión nacional completa del evento, sino su expresión
 territorial en la Región de Valparaíso. En esta región, la precipitación se concentró
-principalmente durante los días 16 y 17 de julio, después de una primera quincena
-relativamente seca. Como resultado, el acumulado entre el 1 y el 17 de julio superó
+principalmente durante los días 16 y 17 de julio &mdash; con un remanente activo la
+madrugada del 18 &mdash; después de una primera quincena relativamente seca. Como
+resultado, el acumulado entre el 1 de julio y las 09:00 del 18 de julio superó
 ampliamente el promedio climatológico estimado para el mismo periodo.</p>
 
 <section class="stats">
   <div class="stat lead-stat"><div class="k">Humedales con anomalía fuerte (z &gt; 2)</div>
-    <div class="v">63 %</div>
-    <div class="s">1.848 de los 2.916 humedales analizados; 1.026 alcanzan una anomalía de
+    <div class="v">90 %</div>
+    <div class="s">2.620 de los 2.916 humedales analizados; 1.364 alcanzan una anomalía de
     elevada magnitud (z &gt; 3).</div></div>
   <div class="stat"><div class="k">Anomalía regional</div>
-    <div class="v">+264 %</div>
-    <div class="s">Equivalente a z = 3,15 respecto de la climatología 2003&ndash;2023.</div></div>
+    <div class="v">+313 %</div>
+    <div class="s">Equivalente a z = 3,74 respecto de la climatología 2003&ndash;2023.</div></div>
   <div class="stat"><div class="k">Precipitación acumulada</div>
-    <div class="v">168 mm</div>
-    <div class="s">Frente a una media climatológica de 48 mm (1&ndash;17 de julio).</div></div>
+    <div class="v">192 mm</div>
+    <div class="s">Frente a una media climatológica de 48,2 mm (1&ndash;18 de julio).</div></div>
   <div class="stat"><div class="k">Máximo observado (24 h)</div>
     <div class="v">120 mm</div>
-    <div class="s">Estación Llanos de Caleu/La Dormida, red DMC/DGAC.</div></div>
+    <div class="s">Estación Llanos de Caleu/La Dormida, red DMC/DGAC (al 17 de julio,
+    21:00).</div></div>
   <div class="stat"><div class="k">Máximo diario regional estimado</div>
-    <div class="v">107,8 mm</div>
+    <div class="v">106,8 mm</div>
     <div class="s">Precipitación media de las celdas analizadas, 17 de julio.</div></div>
   <div class="stat"><div class="k">Categoría del río atmosférico</div>
     <div class="v">AR4&ndash;AR5</div>
@@ -301,9 +301,9 @@ secuencia física del fenómeno.</p>
   <h3 style="margin-top:0">Nivel de congelación y tipo de precipitación</h3>
   <p style="margin-bottom:0">El nivel de congelación (2.300&ndash;2.500 m) determina si la
   precipitación cae como lluvia o como nieve, lo que condiciona el aporte hídrico
-  inmediato a los humedales. De los 1.026 humedales con z &gt; 3, el
-  <strong>85 % se sitúa bajo los 2.300 m</strong> y, por lo tanto, recibió
-  precipitación líquida con aporte directo; los 147 humedales altoandinos restantes,
+  inmediato a los humedales. De los 1.364 humedales con z &gt; 3, el
+  <strong>72 % se sitúa bajo los 2.300 m</strong> y, por lo tanto, recibió
+  precipitación líquida con aporte directo; los 383 humedales altoandinos restantes,
   sobre esa cota, habrían recibido nieve, cuyo aporte es diferido.</p>
 </div>
 
@@ -317,19 +317,23 @@ humedales.</p>
 <h2>Concentración temporal de la precipitación</h2>
 <p>La serie representa la precipitación diaria media estimada sobre las celdas analizadas de la
 Región de Valparaíso. El evento presentó una marcada concentración temporal: el 16 y el
-17 de julio acumularon 153,3 mm, equivalentes aproximadamente al 91 % de la precipitación
-registrada durante todo el periodo analizado. Este comportamiento evidencia que la anomalía
-estuvo determinada principalmente por un pulso breve de precipitación de alta intensidad y no
-por una distribución persistente de las lluvias durante la primera mitad del mes.</p>
+17 de julio acumularon 152,3 mm y la madrugada del 18 (00:00&ndash;09:00) sumó otros
+21,8 mm; en conjunto, cerca del 92 % de la precipitación registrada durante todo el
+periodo analizado. Este comportamiento evidencia que la anomalía estuvo determinada
+principalmente por un pulso breve de precipitación de alta intensidad y no por una
+distribución persistente de las lluvias durante la primera mitad del mes.</p>
 <figure>
   <img alt="Evolucion diaria de la precipitacion media regional" src="{img64('evento_rio_atmosferico.png')}">
   <figcaption><b>Figura 2.</b> Evolución diaria de la precipitación media regional durante el
-  evento hidrometeorológico (1&ndash;17 de julio de 2026).</figcaption>
+  evento hidrometeorológico (1 de julio &ndash; 18 de julio de 2026; el día 18 corresponde
+  al acumulado parcial hasta las 09:00, hora local).</figcaption>
 </figure>
 <div class="tablewrap"><table>
   <thead><tr><th>Día (julio de 2026)</th><th class="num">mm/día</th><th>Intensidad relativa</th></tr></thead>
   <tbody>{tl_rows}</tbody>
 </table></div>
+<p class="muted">*El día 18 corresponde al acumulado parcial entre las 00:00 y las 09:00,
+hora local.</p>
 
 <h2>Distribución espacial de la anomalía</h2>
 <p>Las anomalías de mayor magnitud se localizaron principalmente en el litoral y la cordillera de
@@ -338,8 +342,8 @@ una representación de toda su extensión en Chile central y centro-sur.</p>
 <div class="cols two">
   <figure><img alt="Anomalia porcentual de la precipitacion acumulada" src="{img64('mapa_anomalia_valpo.png')}">
     <figcaption><b>Figura 3.</b> Anomalía porcentual de la precipitación acumulada
-    (1&ndash;17 de julio de 2026) respecto de la climatología 2003&ndash;2023 estimada mediante
-    ERA5-Land.</figcaption></figure>
+    (1 de julio &ndash; 18 de julio 09:00, 2026) respecto de la climatología 2003&ndash;2023
+    estimada mediante ERA5-Land.</figcaption></figure>
   <figure><img alt="Exposicion meteorologica de los humedales" src="{img64('mapa_humedales_valpo.png')}">
     <figcaption><b>Figura 4.</b> Exposición meteorológica de los humedales según la anomalía
     estandarizada de precipitación (puntuación estandarizada, z). El mapa representa
@@ -349,7 +353,7 @@ una representación de toda su extensión en Chile central y centro-sur.</p>
 <h3>Exposición meteorológica de los humedales</h3>
 <p>Los 2.916 humedales del inventario regional fueron asociados con la anomalía de la celda
 correspondiente y representados según su puntuación estandarizada (<em>z-score</em>). Del total
-analizado, 1.848 humedales presentaron una anomalía fuerte, con z &gt; 2, mientras que 1.026
+analizado, 2.620 humedales presentaron una anomalía fuerte, con z &gt; 2, mientras que 1.364
 alcanzaron una anomalía de elevada magnitud, con z &gt; 3. Estos resultados caracterizan
 exclusivamente la exposición meteorológica de los humedales frente al evento; su
 respuesta hidrológica o ecológica depende de factores adicionales descritos en las
@@ -370,7 +374,7 @@ depresiones) y, a partir de ambas, el índice topográfico de humedad
 de valle y vegas &mdash; con mayor propensión a la saturación.</p>
 <p>Combinando en partes iguales la exposición meteorológica (anomalía estandarizada)
 y la exposición topográfica (TWI normalizado) se obtiene un <strong>índice de
-exposición compuesta</strong> para los 1.026 humedales con z &gt; 3. De ellos,
+exposición compuesta</strong> para los {T['humedales_z_gt3']:,} humedales con z &gt; 3. De ellos,
 <strong>{T['humedales_expo_comp_alta']:,} ({es(T['pct_expo_comp_alta'],1)} %) presentan
 exposición compuesta alta</strong>: reciben una anomalía marcada y, además, ocupan
 posiciones topográficas donde el agua tiende a concentrarse. Estos humedales
@@ -439,7 +443,8 @@ promedio de una celda espacial.</p>
 <p>Los cinco modelos y sistemas operacionales consultados reprodujeron un incremento considerable de
 la precipitación durante los días 16 y 17 de julio. Para el 17 de julio, las estimaciones
 variaron entre 74,3 y 143,1 mm/día, mientras que el acumulado entre el 1 y el 17 de julio
-fluctuó entre 140,7 y 166,5 mm. La dispersión entre los resultados representa la
+fluctuó entre 140,7 y 166,5 mm (valores previos a la lluvia de la madrugada del 18). La
+dispersión entre los resultados representa la
 incertidumbre asociada a las diferencias de resolución, parametrización y condiciones
 iniciales de cada modelo. Pese a ello, todos identificaron un pulso intenso de precipitación,
 lo que aporta consistencia al diagnóstico general del evento.</p>
@@ -539,13 +544,17 @@ que el área de estudio:</p>
   <ul class="tight">
     <li><strong>Línea base climatológica:</strong> resultados del modelo MOD_EToPM-HS,
       construido a partir de rásteres diarios de ERA5-Land (resolución aproximada de 10 km,
-      EPSG:32719). Para cada celda se calculó la precipitación acumulada entre el 1 y el 17 de
-      julio de cada año del periodo 2003&ndash;2023; la media regional fue de 48 mm.</li>
-    <li><strong>Ventana reciente:</strong> datos operacionales de Open-Meteo, dado que al momento
-      del análisis ERA5-Land aún no incorporaba los días 16 y 17 de julio de 2026.</li>
+      EPSG:32719). Para cada celda se calculó la precipitación acumulada entre el 1 y el 18 de
+      julio de cada año del periodo 2003&ndash;2023; la media regional fue de 48,2 mm. Dado que
+      la ventana reciente corta a las 09:00 del 18, la comparación con la climatología del día
+      18 completo hace que la anomalía estimada sea levemente conservadora.</li>
+    <li><strong>Ventana reciente:</strong> datos operacionales de Open-Meteo (totales diarios
+      del 1 al 17 de julio y acumulado horario del 18 de julio entre las 00:00 y las 09:00,
+      hora local), dado que al momento del análisis ERA5-Land aún no incorporaba los días
+      16 a 18 de julio de 2026.</li>
     <li><strong>Cálculo de la anomalía:</strong> por celda se calcularon la anomalía porcentual
       y la puntuación estandarizada respecto de la distribución climatológica; cada humedal se
-      asoció al valor de la celda en la que se localiza. Los 1.026 humedales con z &gt; 3 se
+      asoció al valor de la celda en la que se localiza. Los 1.364 humedales con z &gt; 3 se
       exportaron a formato GeoJSON (<code>humedales_z_gt3_valpo.geojson</code>) para su uso en
       QGIS.</li>
   </ul>
@@ -557,9 +566,10 @@ que el área de estudio:</p>
   DWD-ICON, JMA) &middot; Dirección Meteorológica de Chile y Dirección General de
   Aeronáutica Civil (Red EMA y reportes METAR SCVM, SCRD, SCEL) &middot; Inventario de
   humedales de la Región de Valparaíso continental &middot; Elaboración propia
-  (modelo MOD_EToPM-HS). Datos procesados entre el 17 y el 18 de julio de 2026; la ventana
-  reciente incorpora información operacional sujeta a revisión cuando ERA5-Land consolide el
-  periodo analizado.</p>
+  (modelo MOD_EToPM-HS). Datos procesados entre el 17 y el 18 de julio de 2026; actualización
+  con la precipitación acumulada hasta las 09:00 del 18 de julio. La ventana reciente incorpora
+  información operacional sujeta a revisión cuando ERA5-Land consolide el periodo
+  analizado.</p>
 </div>
 </div>"""
 

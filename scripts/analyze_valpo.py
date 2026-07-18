@@ -1,7 +1,8 @@
-"""Anomalia de precipitacion 1-17 julio 2026 en Valparaiso y contraste humedales.
+"""Anomalia de precipitacion 1 jul - 18 jul 09:00 2026 en Valparaiso y humedales.
 
-Combina la climatologia del modelo (clim_valpo.csv, ERA5 2003-2023) con el dato
-reciente casi-tiempo-real (recent_valpo.csv) para calcular, por celda de 10 km:
+Combina la climatologia del modelo (clim_valpo.csv, ERA5 2003-2023, 1-18 jul)
+con el dato reciente casi-tiempo-real (recent_valpo.csv, diarios 1-17 + horario
+del 18 hasta las 09:00) para calcular, por celda de 10 km:
     anomaly_pct = (reciente - clim_media)/clim_media * 100
     z_score     = (reciente - clim_media)/clim_std
 Luego asigna la anomalia a los humedales de Valparaiso y produce mapas, una
@@ -55,6 +56,19 @@ def event_timeline():
     mat = np.array([l["daily"]["precipitation_sum"] for l in locs], dtype=float)
     mean = np.nanmean(mat, axis=0)
     keep = [(a, m) for a, m in zip(days, mean) if "2026-07-01" <= a <= "2026-07-17"]
+    # dia 18 parcial (00:00-09:00 local, horario; cada valor cubre la hora previa)
+    url18 = ("https://api.open-meteo.com/v1/forecast?latitude=" + lats +
+             "&longitude=" + lons + "&hourly=precipitation"
+             "&start_hour=2026-07-18T00:00&end_hour=2026-07-18T09:00"
+             "&timezone=America/Santiago")
+    d18 = json.loads(urllib.request.urlopen(url18, timeout=60).read())
+    locs18 = d18 if isinstance(d18, list) else [d18]
+    tot18 = []
+    for l in locs18:
+        t = l["hourly"]["time"]; p = l["hourly"]["precipitation"]
+        tot18.append(sum(b for a, b in zip(t, p)
+                         if a > "2026-07-18T00:00" and b is not None))
+    keep.append(("2026-07-18", float(np.mean(tot18))))
     return keep
 
 
@@ -100,10 +114,11 @@ def main():
     # --- resumen ---
     z = hu_res["z_score"]
     resumen = {
-        "evento": "Rio atmosferico sobre Chile central, 16-17 julio 2026",
-        "ventana": "1-17 julio 2026",
-        "climatologia": "modelo MOD_EToPM-HS (ERA5-Land 10 km), 2003-2023",
-        "reciente": "Open-Meteo forecast (past_days, casi-tiempo-real)",
+        "evento": "Rio atmosferico sobre Chile central, 16-18 julio 2026",
+        "ventana": "1 julio - 18 julio 09:00 hora local, 2026",
+        "climatologia": "modelo MOD_EToPM-HS (ERA5-Land 10 km), 2003-2023, 1-18 jul",
+        "reciente": ("Open-Meteo forecast (past_days, casi-tiempo-real); "
+                     "18-jul parcial 00:00-09:00 via horario"),
         "celdas": int(len(df)),
         "clim_media_mm": round(float(df.clim_mean_mm.mean()), 1),
         "reciente_media_mm": round(float(df.recent_mm.mean()), 1),
@@ -153,10 +168,11 @@ def main():
 
     # --- FIGURA 3: evolucion diaria de la precipitacion ---
     days = [str(int(a[8:10])) for a, _ in timeline]; vals = [m for _, m in timeline]
+    days[-1] = "18*"                       # parcial: solo 00:00-09:00
     fig, ax = plt.subplots(figsize=(10, 4))
     ax.bar(days, vals, color=["#b5341f" if v > 20 else "#3a7ca5" for v in vals])
     ax.set_ylabel("Precipitación media regional (mm/día)")
-    ax.set_xlabel("Día (julio de 2026)")
+    ax.set_xlabel("Día (julio de 2026) — *18: acumulado parcial hasta las 09:00")
     ax.grid(axis="y", color="#e6e6e6", linewidth=0.7)
     ax.set_axisbelow(True)
     fig.tight_layout(); fig.savefig(HERE / "evento_rio_atmosferico.png", dpi=150)

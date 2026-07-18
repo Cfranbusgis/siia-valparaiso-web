@@ -1,10 +1,12 @@
-"""Precipitacion reciente 1-17 julio 2026 en las celdas del modelo (Valparaiso).
+"""Precipitacion reciente 1 jul - 18 jul 09:00 (local) en las celdas del modelo.
 
-El archivo ERA5 (reanalisis) solo llega ~9-jul por su rezago, justo antes del
-rio atmosferico del 16-17 jul. Por eso la ventana reciente se toma de la API
-forecast de Open-Meteo (past_days), que integra el analisis casi-tiempo-real y
-SI cubre el evento. Es el 'parche' de datos actuales sobre la climatologia ERA5
-del modelo.
+El archivo ERA5 (reanalisis) tiene rezago de dias y no cubre el rio atmosferico
+del 16-18 jul. Por eso la ventana reciente se toma de la API forecast de
+Open-Meteo (past_days), que integra el analisis casi-tiempo-real. Es el 'parche'
+de datos actuales sobre la climatologia ERA5 del modelo.
+
+Los dias 1-17 se acumulan con los totales diarios; el 18 se agrega parcial con
+datos horarios acumulados entre las 00:00 y las 09:00 hora de Chile.
 
 Entrada:  clim_valpo.csv (centros de celda).
 Salida:   recent_valpo.csv (row,col,lon,lat,recent_mm,cover_days,last_day)
@@ -21,7 +23,9 @@ OUT = config.WORK_DIR
 CLIM = OUT / "clim_valpo.csv"
 FORECAST = "https://api.open-meteo.com/v1/forecast"
 CHUNK = 50
-D0, D1 = "2026-07-01", "2026-07-17"
+D0, D1 = "2026-07-01", "2026-07-17"        # dias completos (totales diarios)
+HP_DAY = "2026-07-18"                       # dia parcial (horario)
+H0, H1 = f"{HP_DAY}T00:00", f"{HP_DAY}T09:00"
 
 
 def load_cells():
@@ -33,12 +37,7 @@ def load_cells():
     return cells
 
 
-def fetch(chunk):
-    lats = ",".join(f"{la:.4f}" for *_, la in [(r, c, lo, la) for r, c, lo, la in chunk])
-    lons = ",".join(f"{lo:.4f}" for r, c, lo, la in chunk)
-    url = (f"{FORECAST}?latitude={lats}&longitude={lons}"
-           "&daily=precipitation_sum&past_days=25&forecast_days=1"
-           "&timezone=America/Santiago")
+def get(url):
     for attempt in range(6):
         try:
             d = json.loads(urllib.request.urlopen(url, timeout=90).read())
@@ -49,31 +48,63 @@ def fetch(chunk):
     raise RuntimeError("fallo la API forecast")
 
 
+def fetch_daily(chunk):
+    lats = ",".join(f"{la:.4f}" for *_, la in chunk)
+    lons = ",".join(f"{lo:.4f}" for r, c, lo, la in chunk)
+    url = (f"{FORECAST}?latitude={lats}&longitude={lons}"
+           "&daily=precipitation_sum&past_days=25&forecast_days=1"
+           "&timezone=America/Santiago")
+    return get(url)
+
+
+def fetch_hourly18(chunk):
+    lats = ",".join(f"{la:.4f}" for *_, la in chunk)
+    lons = ",".join(f"{lo:.4f}" for r, c, lo, la in chunk)
+    url = (f"{FORECAST}?latitude={lats}&longitude={lons}"
+           f"&hourly=precipitation&start_hour={H0}&end_hour={H1}"
+           "&timezone=America/Santiago")
+    return get(url)
+
+
 def july_sum(one):
     t = one["daily"]["time"]; p = one["daily"]["precipitation_sum"]
     tot, cover, last = 0.0, 0, ""
     for a, b in zip(t, p):
         if D0 <= a <= D1 and b is not None:
             tot += b; cover += 1; last = a
-    return round(tot, 1), cover, last
+    return tot, cover, last
+
+
+def partial18(one):
+    """mm acumulados 00:00-09:00 del 18-jul (cada valor cubre la hora previa)."""
+    t = one["hourly"]["time"]; p = one["hourly"]["precipitation"]
+    return sum(b for a, b in zip(t, p) if a > H0 and b is not None)
 
 
 def main():
     cells = load_cells()
     print(f"celdas a consultar: {len(cells)}")
     out = ["row,col,lon,lat,recent_mm,cover_days,last_day"]
+    p18_all = []
     for i in range(0, len(cells), CHUNK):
         chunk = cells[i:i + CHUNK]
-        locs = fetch(chunk)
-        for (r, c, lo, la), one in zip(chunk, locs):
-            tot, cover, last = july_sum(one)
-            out.append(f"{r},{c},{lo:.4f},{la:.4f},{tot},{cover},{last}")
+        locs_d = fetch_daily(chunk)
+        time.sleep(2)
+        locs_h = fetch_hourly18(chunk)
+        for (r, c, lo, la), one_d, one_h in zip(chunk, locs_d, locs_h):
+            tot, cover, _ = july_sum(one_d)
+            p18 = partial18(one_h)
+            p18_all.append(p18)
+            tot = round(tot + p18, 1)
+            out.append(f"{r},{c},{lo:.4f},{la:.4f},{tot},{cover},{H1}")
         print(f"  {min(i+CHUNK,len(cells))}/{len(cells)}", flush=True)
         time.sleep(2)
     (OUT / "recent_valpo.csv").write_text("\n".join(out), encoding="utf-8")
     vals = [float(l.split(",")[4]) for l in out[1:]]
-    print(f"recent jul1-17 (mm) min/media/max: "
+    print(f"recent 1jul-18jul09:00 (mm) min/media/max: "
           f"{min(vals):.1f} / {sum(vals)/len(vals):.1f} / {max(vals):.1f}")
+    print(f"parcial 18-jul 00-09h (mm) min/media/max: "
+          f"{min(p18_all):.1f} / {sum(p18_all)/len(p18_all):.1f} / {max(p18_all):.1f}")
     print(f"-> recent_valpo.csv ({len(out)-1} celdas)")
 
 

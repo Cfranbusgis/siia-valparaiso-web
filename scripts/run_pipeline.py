@@ -28,8 +28,8 @@ SCRIPTS = Path(__file__).resolve().parent
 
 # (script, descripción, ¿requiere token DMC?)
 STEPS = [
-    ("clim_valpo.py", "Climatología 1-17 jul (ERA5 del modelo)", False),
-    ("fetch_recent.py", "Precipitación reciente (Open-Meteo)", False),
+    ("clim_valpo.py", "Climatología 1-18 jul (ERA5 del modelo)", False),
+    ("fetch_recent.py", "Precipitación reciente 1 jul-18 jul 09:00 (Open-Meteo)", False),
     ("analyze_valpo.py", "Anomalía + contraste con humedales", False),
     ("build_extras.py", "Mapa modelo-vs-obs + GeoJSON z>3", False),
     ("topo_analysis.py", "Pendiente + flujo + TWI (DEM)", False),

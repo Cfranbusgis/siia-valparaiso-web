@@ -1,19 +1,19 @@
 {
-  "humedales_z_gt3": 1026,
-  "elev_media_m": 589.9,
-  "slope_media_deg": 4.84,
-  "twi_medio": 11.78,
-  "expo_comp_media": 0.605,
-  "humedales_expo_comp_alta": 483,
-  "pct_expo_comp_alta": 47.1,
+  "humedales_z_gt3": 1364,
+  "elev_media_m": 1012.7,
+  "slope_media_deg": 6.34,
+  "twi_medio": 11.43,
+  "expo_comp_media": 0.613,
+  "humedales_expo_comp_alta": 671,
+  "pct_expo_comp_alta": 49.2,
   "top_comunas_expo_comp": {
-    "Viña del Mar": 0.735,
-    "Puchuncaví": 0.729,
-    "Papudo": 0.723,
-    "Zapallar": 0.72,
-    "La Ligua": 0.694,
-    "Valparaíso": 0.682,
-    "Casablanca": 0.681,
-    "Quilpué": 0.674
+    "Puchuncaví": 0.805,
+    "Zapallar": 0.801,
+    "Rinconada": 0.779,
+    "Papudo": 0.777,
+    "Viña del Mar": 0.774,
+    "La Ligua": 0.763,
+    "Calera": 0.731,
+    "Quilpué": 0.727
   }
 }
