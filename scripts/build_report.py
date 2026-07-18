@@ -135,7 +135,8 @@ body{margin:0;background:var(--paper);color:var(--ink);
 .wrap{max-width:940px;margin:0 auto;padding:clamp(20px,4vw,54px)}
 h1,h2,h3,h4{font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
   text-wrap:balance;line-height:1.22;letter-spacing:-.01em}
-h1{font-size:clamp(1.7rem,3.8vw,2.4rem);margin:.1em 0}
+h1{font-size:clamp(1.7rem,3.8vw,2.4rem);margin:.1em 0;text-wrap:auto;
+  text-align:justify;hyphens:auto}
 h2{font-size:1.4rem;margin:2.6em 0 .6em;padding-bottom:.3em;border-bottom:1px solid var(--line)}
 h3{font-size:1.1rem;margin:1.8em 0 .4em}
 .eyebrow{font-family:-apple-system,"Segoe UI",sans-serif;text-transform:uppercase;
