@@ -1,0 +1,22 @@
+schema: spec-driven
+
+context: |
+  Proyecto: Sistema Regional de Inteligencia Ambiental (SIIA) — Región de Valparaíso, Chile.
+  Dominio: monitoreo hidrometeorológico y ambiental; ríos atmosféricos, anomalías de
+  precipitación, humedales, análisis geoespacial.
+  Stack: Python (geopandas, rasterio, pysheds, plotly, scipy, matplotlib) para el
+  pipeline de análisis; Node (servidor estático sin dependencias) para el sitio;
+  despliegue en Railway. Datos: ERA5-Land (modelo propio MOD_EToPM-HS), Open-Meteo,
+  API DMC/DGAC, inventario de humedales.
+  Convenciones: rutas configurables por variables de entorno (config.py); textos en
+  español con formato numérico académico; enmarque científico (no dashboard).
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
