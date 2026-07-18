@@ -144,7 +144,7 @@ h3{font-size:1.1rem;margin:1.8em 0 .4em}
   text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-top:.5em}
 .lead{font-size:1.08rem}
 .muted{color:var(--muted)}
-p{max-width:70ch}
+p{max-width:none;text-align:justify;hyphens:auto}
 .masthead{border-top:3px solid var(--deep);padding-top:16px}
 /* --- jerarquia de indicadores --- */
 .stats{display:grid;gap:14px;margin:24px 0;
@@ -175,7 +175,8 @@ p{max-width:70ch}
 figure{margin:20px 0;background:var(--card);border:1px solid var(--line);
   border-radius:14px;padding:12px;box-shadow:var(--shadow)}
 figure img{width:100%;height:auto;border-radius:8px;display:block}
-figcaption{font-size:.86rem;color:var(--muted);padding:12px 6px 2px;max-width:none}
+figcaption{font-size:.86rem;color:var(--muted);padding:12px 6px 2px;max-width:none;
+  text-align:justify;hyphens:auto}
 figcaption b{color:var(--ink)}
 .cols{display:grid;gap:20px;grid-template-columns:1fr}
 @media(min-width:700px){.cols.two{grid-template-columns:1fr 1fr}}
@@ -203,7 +204,7 @@ tr.hit td:first-child{font-weight:700;color:var(--crit)}
 .conf-badge{display:inline-block;background:var(--good);color:#fff;font-weight:700;
   padding:.2em .7em;border-radius:999px;font-size:.85rem;margin-left:.4em}
 ul.tight{margin:.3em 0;padding-left:1.2em}
-ul.tight li{margin:.35em 0;max-width:68ch}
+ul.tight li{margin:.35em 0;text-align:justify;hyphens:auto}
 .sourcebar{margin-top:44px;border-top:2px solid var(--deep);padding-top:14px;
   font-size:.82rem;color:var(--muted)}
 .sourcebar .lbl{text-transform:uppercase;letter-spacing:.1em;font-weight:700;
