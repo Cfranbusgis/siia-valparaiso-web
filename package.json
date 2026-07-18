@@ -1,0 +1,12 @@
+{
+  "name": "siia-valparaiso-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema Regional de Inteligencia Ambiental - informe del rio atmosferico de julio 2026 (Valparaiso)",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "ivt_maximo_kg_m_s": 818.9,
+  "hora_maximo": "2026-07-16T14:00",
+  "direccion_flujo_en_maximo_grados": 341,
+  "horas_ivt_sobre_250": 82,
+  "categoria_AR_estimada": "AR4 (extremo)",
+  "ivt_pico_por_punto": [
+    757.1,
+    818.9,
+    779.0
+  ],
+  "metodo": "IVT = (1/g) int q*V dp, niveles 1000-300 hPa; punto costero de mayor pico",
+  "fuente": "Open-Meteo (niveles de presion); escala Ralph et al. 2019",
+  "nota": "estimacion propia; confirma un rio atmosferico intenso con flujo del NNO. Es algo menor que la clasificacion operacional AR4-AR5, esperable por la resolucion del dato y el suavizado espacial/temporal"
+}
