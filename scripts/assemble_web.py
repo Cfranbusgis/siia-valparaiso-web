@@ -13,8 +13,9 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[1]
-SRC = Path(r"C:\Users\cfran\Desktop\Taller RRNN\Mapa_Humedales\anomalia_valpo_julio2026")
+import config
+REPO = config.REPO
+SRC = config.WORK_DIR
 PUBLIC = REPO / "public"
 DATA = REPO / "data"
 SCRIPTS = REPO / "scripts"
@@ -89,17 +90,9 @@ def copy_assets() -> None:
         if p.exists():
             shutil.copy2(p, DATA / f)
     print(f"data/  ({sum(1 for f in data_files if (SRC/f).exists())} archivos)")
-
-    scripts = [
-        "clim_valpo.py", "fetch_recent.py", "analyze_valpo.py",
-        "build_extras.py", "topo_analysis.py", "modelo_3d_anomalia.py",
-        "ivt_evento.py", "build_report.py", "dmc_query.py", "dmc_extract.py",
-    ]
-    for f in scripts:
-        p = SRC / f
-        if p.exists():
-            shutil.copy2(p, SCRIPTS / f)
-    print(f"scripts/  ({sum(1 for f in scripts if (SRC/f).exists())} archivos)")
+    # NOTA: no se copian los scripts. Los scripts del repositorio (scripts/) son
+    # la fuente de verdad (versionada y con rutas configurables via config.py);
+    # copiarlos desde WORK_DIR los sobrescribiria con versiones no portables.
 
 
 def main() -> None:

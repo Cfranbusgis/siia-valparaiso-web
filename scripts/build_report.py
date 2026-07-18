@@ -13,7 +13,8 @@ import base64
 import json
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+import config
+HERE = config.WORK_DIR
 R = json.loads((HERE / "resumen_valpo.json").read_text(encoding="utf-8"))
 T = json.loads((HERE / "resumen_topo.json").read_text(encoding="utf-8"))
 

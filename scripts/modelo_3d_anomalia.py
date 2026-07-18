@@ -30,10 +30,11 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize, TwoSlopeNorm
 from matplotlib import cm
 
-HERE = Path(__file__).resolve().parent
-MODEL = Path(r"C:\Users\cfran\Desktop\MOD_EToPM-HS")
-DEM = MODEL / "03_inputs" / "DEM" / "DEM_250m_UTM19S_AOI.tif"
-AOI = MODEL / "03_inputs" / "AOI" / "RV.shp"
+import config
+HERE = config.WORK_DIR
+MODEL = config.MODEL_DIR
+DEM = config.DEM_TIF
+AOI = config.AOI_SHP
 VE = 8.0                       # exageracion vertical
 MAX_SIDE = 340                 # remuestreo para rendimiento
 

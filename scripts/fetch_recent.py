@@ -16,7 +16,8 @@ import time
 import urllib.request
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parent
+import config
+OUT = config.WORK_DIR
 CLIM = OUT / "clim_valpo.csv"
 FORECAST = "https://api.open-meteo.com/v1/forecast"
 CHUNK = 50

@@ -20,10 +20,11 @@ import geopandas as gpd
 from shapely.geometry import Point
 from shapely.prepared import prep
 
-MODEL = Path(r"C:\Users\cfran\Desktop\MOD_EToPM-HS")
-ERA5 = MODEL / "03_inputs" / "ERA5"
-AOI = MODEL / "03_inputs" / "AOI" / "RV.shp"
-OUT = Path(__file__).resolve().parent
+import config
+MODEL = config.MODEL_DIR
+ERA5 = config.ERA5_DIR
+AOI = config.AOI_SHP
+OUT = config.WORK_DIR
 YEARS = range(2003, 2024)          # 2003-2023
 DAY_MIN, DAY_MAX = 1, 17           # ventana 1-17 julio
 

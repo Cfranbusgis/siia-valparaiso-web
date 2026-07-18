@@ -27,7 +27,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-HERE = Path(__file__).resolve().parent
+import config
+HERE = config.WORK_DIR
 LEVELS = [1000, 975, 950, 925, 900, 850, 800, 700, 600, 500, 400, 300]
 G = 9.80665
 # puntos costeros de entrada del flujo (norte, centro, sur de la region)

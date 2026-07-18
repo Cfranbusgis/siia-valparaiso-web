@@ -23,10 +23,11 @@ from matplotlib.colors import TwoSlopeNorm
 from rasterio.transform import Affine
 from shapely.geometry import box
 
-HERE = Path(__file__).resolve().parent
-MODEL = Path(r"C:\Users\cfran\Desktop\MOD_EToPM-HS")
-AOI = MODEL / "03_inputs" / "AOI" / "RV.shp"
-HU = HERE.parent / "humedales_inventario_rm_rv_cont.shp"
+import config
+HERE = config.WORK_DIR
+MODEL = config.MODEL_DIR
+AOI = config.AOI_SHP
+HU = config.HUMEDALES_SHP
 UTM = 32719
 
 

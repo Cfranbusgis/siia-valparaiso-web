@@ -11,7 +11,8 @@ import json
 import re
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+import config
+HERE = config.WORK_DIR
 d = json.loads((HERE / "dmc_valpo_reciente.json").read_text(encoding="utf-8"))
 est = next(iter(d.values()))["data"]["datosEstaciones"]
 

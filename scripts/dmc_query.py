@@ -21,7 +21,8 @@ import os
 import urllib.request
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+import config
+HERE = config.WORK_DIR
 BASE = "https://climatologia.meteochile.gob.cl/application/servicios"
 USER = os.getenv("DMC_USER", "")
 TOKEN = os.getenv("DMC_TOKEN", "")

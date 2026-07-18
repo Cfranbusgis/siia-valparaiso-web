@@ -14,6 +14,11 @@ Incluye:
 El sitio es **estático**: un servidor mínimo en Node (sin dependencias) entrega los
 archivos de `public/`. Está listo para desplegarse en **Railway**.
 
+El análisis que genera el informe es **reproducible**: ver
+[`CONTRIBUTING.md`](CONTRIBUTING.md) para instalar el entorno
+(`requirements.txt`), configurar las rutas de datos y ejecutar el pipeline
+(`python scripts/run_pipeline.py`).
+
 ---
 
 ## Estructura
@@ -27,7 +32,11 @@ siia-valparaiso-web/
 │   ├── index.html         # informe
 │   └── modelo-3d.html     # modelo 3D interactivo
 ├── data/              # datos del análisis (CSV, GeoJSON, resúmenes JSON)
-└── scripts/           # scripts Python que generan el análisis (reproducibilidad)
+├── sources/           # insumos livianos incluidos (DEM 250 m, AOI RV.shp)
+├── scripts/           # pipeline Python + config.py (rutas) + run_pipeline.py
+├── requirements.txt   # dependencias Python
+├── Makefile           # atajos (make pipeline / site / serve)
+└── CONTRIBUTING.md    # cómo reproducir y extender el modelo
 ```
 
 ---

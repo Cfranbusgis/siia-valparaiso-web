@@ -30,10 +30,11 @@ import geopandas as gpd
 import rasterio
 from pysheds.grid import Grid
 
-HERE = Path(__file__).resolve().parent
-MODEL = Path(r"C:\Users\cfran\Desktop\MOD_EToPM-HS")
-DEM = MODEL / "03_inputs" / "DEM" / "DEM_250m_UTM19S_AOI.tif"
-AOI = MODEL / "03_inputs" / "AOI" / "RV.shp"
+import config
+HERE = config.WORK_DIR
+MODEL = config.MODEL_DIR
+DEM = config.DEM_TIF
+AOI = config.AOI_SHP
 HU_GEO = HERE / "humedales_z_gt3_valpo.geojson"
 
 
