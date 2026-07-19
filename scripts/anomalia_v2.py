@@ -33,7 +33,8 @@ import geopandas as gpd
 from affine import Affine
 from shapely.geometry import box
 
-from config import WORK_DIR as HERE, HUMEDALES_SHP as HU
+HERE = Path(__file__).resolve().parent
+HU = HERE.parent / "humedales_inventario_rm_rv_cont.shp"
 YEARS_NPZ = HERE / "clim_om_years.npz"
 ARCHIVE = "https://archive-api.open-meteo.com/v1/archive"
 CHUNK = 50
@@ -160,7 +161,7 @@ def main():
     resumen = {
         "evento": "Rio atmosferico sobre Chile central, 16-18 julio 2026",
         "ventana": "1 julio - 19 julio 03:00 hora local, 2026",
-        "climatologia": ("Open-Meteo Archive era5_seamless 2003-2023, 1-19 jul, "
+        "climatologia": ("Open-Meteo Archive era5_seamless 1995-2025 (30 anhos, capta megasequia), 1-19 jul, "
                          "por anho (homogenea con el reciente)"),
         "correccion": ("IDW de residuos log(obs/modelo), 14 estaciones DMC "
                        "robustas; elegida por LOO (RMSE 22.0 vs 54.2 mm)"),

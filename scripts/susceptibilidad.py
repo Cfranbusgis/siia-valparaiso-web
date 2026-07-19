@@ -27,14 +27,14 @@ def main():
     exp = pd.read_csv(HERE / "humedales_exposicion_v2.csv", encoding="utf-8")
     con = pd.read_csv(HERE / "humedales_concavidad.csv", encoding="utf-8")
     sue = pd.read_csv(HERE / "humedales_suelo.csv", encoding="utf-8")
-    ddr = pd.read_csv(HERE / "humedales_distdren.csv", encoding="utf-8")
+    ddr = pd.read_csv(HERE / "humedales_distrios.csv", encoding="utf-8")  # rios oficiales
     ano = pd.read_csv(HERE / "humedales_valpo_anomalia_v2.csv", encoding="utf-8")
     n = len(exp); assert len(con) == n == len(sue) == len(ano) == len(ddr)
 
     twi = exp["expo_topo"].to_numpy()
     acc = con["acc_topo"].to_numpy()
     suelo = sue["expo_suelo"].to_numpy()             # puede tener NaN
-    prox = ddr["prox_drenaje"].to_numpy()            # cercania a cauce (fsm-pk)
+    prox = ddr["prox_rio"].to_numpy()                # cercania a rio oficial (fsm-pk)
     met = exp["expo_met"].to_numpy()
 
     # susceptibilidad de acumulacion = media de componentes disponibles
@@ -61,6 +61,7 @@ def main():
         "prioridad_inundacion": np.round(prioridad, 3),
         "clase_prioridad": clase,
         "suelo_fuente": sue["fuente_suelo"],
+        "cuenca": pd.read_csv(HERE / "humedales_hidro.csv", encoding="utf-8")["cuenca"],
     })
     out.to_csv(HERE / "humedales_susceptibilidad.csv", index=False, encoding="utf-8")
 
