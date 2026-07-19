@@ -13,9 +13,17 @@
   nav{position:fixed;top:0;left:0;right:0;height:52px;z-index:10;display:flex;gap:16px;align-items:center;
     padding:0 18px;background:var(--nav);color:#fff;box-sizing:border-box;box-shadow:0 2px 8px rgba(0,0,0,.15)}
   nav strong{letter-spacing:.04em} nav a{color:#cfe6f2;text-decoration:none;font-size:.9rem} nav a:hover{color:#fff}
-  .panel{position:absolute;top:66px;left:12px;z-index:5;background:rgba(255,255,255,.97);border-radius:12px;
-    padding:12px 14px;box-shadow:0 6px 18px rgba(0,0,0,.18);max-width:246px;font-size:.8rem}
-  .panel h1{font-size:.95rem;margin:0 0 6px} .panel .lbl{font-weight:700;margin:9px 0 4px;font-size:.76rem;color:#33475a}
+  .card{position:absolute;z-index:5;background:rgba(255,255,255,.97);border-radius:12px;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);font-size:.8rem}
+  .panel{top:66px;left:12px;max-width:246px}
+  .legend{bottom:16px;left:12px;max-height:44vh;overflow:auto;max-width:250px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;cursor:pointer;
+    font-weight:700;font-size:.85rem;color:var(--nav);user-select:none}
+  .head .min{border:none;background:#eef2f6;color:var(--nav);border-radius:6px;width:22px;height:22px;
+    font-size:1rem;line-height:1;cursor:pointer}
+  .body{padding:0 12px 12px}
+  .collapsed .body{display:none}
+  .lbl{font-weight:700;margin:9px 0 4px;font-size:.76rem;color:#33475a}
   .chk{display:flex;align-items:center;gap:6px;margin:3px 0} .chk input{accent-color:var(--nav)}
   .btns{display:flex;flex-wrap:wrap;gap:5px}
   .btns button{border:1px solid #cdd7e0;background:#fff;color:var(--ink);border-radius:999px;padding:4px 9px;font-size:.76rem;cursor:pointer}
@@ -23,9 +31,7 @@
   .base{display:flex;gap:6px}
   .base button{flex:1;border:1px solid #cdd7e0;background:#fff;border-radius:8px;padding:4px;font-size:.74rem;cursor:pointer}
   .base button.on{background:#12303f;color:#fff;border-color:#12303f}
-  .legend{position:absolute;bottom:16px;left:12px;z-index:5;background:rgba(255,255,255,.97);border-radius:10px;
-    padding:10px 12px;box-shadow:0 6px 18px rgba(0,0,0,.18);font-size:.78rem;max-height:44vh;overflow:auto;max-width:250px}
-  .legend b{display:block;margin-bottom:6px;font-size:.8rem} .row{display:flex;align-items:center;gap:7px;margin:2px 0}
+  .row{display:flex;align-items:center;gap:7px;margin:2px 0}
   .sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.15);flex:none}
   .maplibregl-popup-content{font-size:.8rem;line-height:1.4;padding:10px 12px;border-radius:8px}
   .maplibregl-popup-content b{color:var(--nav)}
@@ -38,16 +44,21 @@
   <a href="/modelo-3d.html">Modelo 3D</a>
   <span style="margin-left:auto;font-size:.8rem;opacity:.85">Mapa interactivo de humedales</span>
 </nav>
-<div class="panel">
-  <h1>Humedales de Valparaíso</h1>
-  <div class="lbl">Capas (superponibles)</div>
-  <div id="layers"></div>
-  <div class="lbl">Colorear humedales por</div>
-  <div class="btns" id="btns"></div>
-  <div class="lbl">Base</div>
-  <div class="base"><button data-b="claro" class="on">Claro</button><button data-b="sat">Satélite</button></div>
+<div class="card panel" id="panel">
+  <div class="head" id="phead"><span>Controles</span><button class="min" id="pmin">–</button></div>
+  <div class="body">
+    <div class="lbl">Capas (superponibles)</div>
+    <div id="layers"></div>
+    <div class="lbl">Colorear humedales por</div>
+    <div class="btns" id="btns"></div>
+    <div class="lbl">Base</div>
+    <div class="base"><button data-b="claro" class="on">Claro</button><button data-b="sat">Satélite</button></div>
+  </div>
 </div>
-<div class="legend" id="legend"></div>
+<div class="card legend" id="legend">
+  <div class="head" id="lhead"><span>Leyenda</span><button class="min" id="lmin">–</button></div>
+  <div class="body" id="legendbody"></div>
+</div>
 <div id="map"></div>
 <script>
 const CUENCAS=[["Rio Aconcagua","#4e79a7"],["Costeras entre Aconcagua y Maipo","#59a14f"],
@@ -67,8 +78,7 @@ const VARS={
 };
 const VORDER=["p","cl","s","su"];
 let cvar="p";
-const LAYERS=[["region","Región de Valparaíso",true],["cuencas","Cuencas (BNA)",false],
-  ["poly","Humedales (polígonos)",false],["pts","Humedales (puntos)",true]];
+const LAYERS=[["region","Región de Valparaíso",true],["cuencas","Cuencas (BNA)",false],["poly","Humedales",true]];
 
 const map=new maplibregl.Map({container:"map",style:{version:8,sources:{
   claro:{type:"raster",tileSize:256,attribution:"© OpenStreetMap · © CARTO",
@@ -84,7 +94,6 @@ function colorExpr(k){const V=VARS[k];
   if(V.type==="grad"){const e=["interpolate",["linear"],["coalesce",["get",k],-1],-1,"#d9d9d9"];V.stops.forEach(([v,c])=>e.push(v,c));return e;}
   const e=["match",["coalesce",["get",k],"?"]];V.cats.forEach(([v,c])=>e.push(v,c));e.push("#bbb");return e;}
 function setColor(k){cvar=k;
-  if(map.getLayer("hpts"))map.setPaintProperty("hpts","circle-color",colorExpr(k));
   if(map.getLayer("hpoly"))map.setPaintProperty("hpoly","fill-color",colorExpr(k));
   document.querySelectorAll("#btns button").forEach(b=>b.classList.toggle("on",b.dataset.k===k));
   drawLegend();}
@@ -94,14 +103,20 @@ function drawLegend(){const V=VARS[cvar];let h="<b>"+V.leg+"</b>";
   else V.stops.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c}"></span>${V.fmt(v)}</div>`);
   if(document.querySelector('input[data-l="cuencas"]').checked){h+='<b style="margin-top:8px">Cuencas</b>';
     CUENCAS.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c};opacity:.6"></span>${v}</div>`);}
-  document.getElementById("legend").innerHTML=h;}
+  document.getElementById("legendbody").innerHTML=h;}
 
 function setLayer(id,on){const v=on?"visible":"none";
-  const ids={region:["region-line"],cuencas:["cuencas-fill","cuencas-line"],poly:["hpoly","hpoly-line"],pts:["hpts"]}[id];
+  const ids={region:["region-line"],cuencas:["cuencas-fill","cuencas-line"],poly:["hpoly","hpoly-line"]}[id];
   ids.forEach(l=>{if(map.getLayer(l))map.setLayoutProperty(l,"visibility",v);});
   if(id==="cuencas")drawLegend();}
 
-// UI
+// minimizar tarjetas
+function bindMin(cardId,btnId){const card=document.getElementById(cardId),btn=document.getElementById(btnId);
+  const head=card.querySelector(".head");
+  head.onclick=e=>{if(e.target.tagName==="INPUT")return;card.classList.toggle("collapsed");
+    btn.textContent=card.classList.contains("collapsed")?"+":"–";};}
+bindMin("panel","pmin"); bindMin("legend","lmin");
+
 const lay=document.getElementById("layers");
 LAYERS.forEach(([id,txt,on])=>{const d=document.createElement("label");d.className="chk";
   d.innerHTML=`<input type="checkbox" data-l="${id}" ${on?"checked":""}> ${txt}`;
@@ -120,21 +135,18 @@ map.on("load",()=>{
     paint:{"fill-color":(()=>{const e=["match",["get","NOM_CUEN"]];CUENCAS.forEach(([v,c])=>e.push(v,c));e.push("#bbb");return e;})(),"fill-opacity":0.35}});
   map.addLayer({id:"cuencas-line",type:"line",source:"cu",layout:{visibility:"none"},paint:{"line-color":"#33475a","line-width":0.7,"line-opacity":0.7}});
   map.addSource("hp",{type:"geojson",data:"/humedales_poly.geojson"});
-  map.addLayer({id:"hpoly",type:"fill",source:"hp",layout:{visibility:"none"},paint:{"fill-color":colorExpr("p"),"fill-opacity":0.85,"fill-outline-color":"#12303f"}});
-  map.addLayer({id:"hpoly-line",type:"line",source:"hp",layout:{visibility:"none"},paint:{"line-color":"#12303f","line-width":0.3}});
-  map.addSource("h",{type:"geojson",data:"/humedales.geojson"});
-  map.addLayer({id:"hpts",type:"circle",source:"h",paint:{"circle-color":colorExpr("p"),
-    "circle-radius":["interpolate",["linear"],["zoom"],6,2.2,9,4.5,12,9],"circle-opacity":0.9,"circle-stroke-width":0.4,"circle-stroke-color":"rgba(20,40,60,.5)"}});
+  map.addLayer({id:"hpoly",type:"fill",source:"hp",paint:{"fill-color":colorExpr("p"),"fill-opacity":0.88,"fill-outline-color":"#12303f"}});
+  map.addLayer({id:"hpoly-line",type:"line",source:"hp",paint:{"line-color":"#12303f","line-width":0.35}});
   setColor("p");
   const pop=new maplibregl.Popup({closeButton:true,maxWidth:"260px"});
-  function ficha(p,ll){pop.setLngLat(ll).setHTML(
-    `<b>${p.n}</b><br>${p.c}${p.cu?" · "+p.cu:""}<br>`+
-    `Percentil: <b>P${(+p.p).toFixed(0)}</b> · Acumulado ${(+p.mm).toFixed(0)} mm<br>`+
-    `Amenaza de inundación: <b>${p.cl}</b><br>`+
-    `Susceptibilidad ${(+p.s).toFixed(2)} · Retención suelo ${p.su!=null?(+p.su).toFixed(2):"s/d"}`).addTo(map);}
-  ["hpts","hpoly"].forEach(l=>{map.on("click",l,e=>ficha(e.features[0].properties,e.lngLat));
-    map.on("mouseenter",l,()=>map.getCanvas().style.cursor="pointer");
-    map.on("mouseleave",l,()=>map.getCanvas().style.cursor="");});
+  map.on("click","hpoly",e=>{const p=e.features[0].properties;
+    pop.setLngLat(e.lngLat).setHTML(
+      `<b>${p.n}</b><br>${p.c}${p.cu?" · "+p.cu:""}<br>`+
+      `Percentil: <b>P${(+p.p).toFixed(0)}</b> · Acumulado ${(+p.mm).toFixed(0)} mm<br>`+
+      `Amenaza de inundación: <b>${p.cl}</b><br>`+
+      `Susceptibilidad ${(+p.s).toFixed(2)} · Retención suelo ${p.su!=null?(+p.su).toFixed(2):"s/d"}`).addTo(map);});
+  map.on("mouseenter","hpoly",()=>map.getCanvas().style.cursor="pointer");
+  map.on("mouseleave","hpoly",()=>map.getCanvas().style.cursor="");
 });
 </script>
 </body>
