@@ -24,7 +24,9 @@
   .body{padding:0 12px 12px}
   .collapsed .body{display:none}
   .lbl{font-weight:700;margin:9px 0 4px;font-size:.76rem;color:#33475a}
-  .chk{display:flex;align-items:center;gap:6px;margin:3px 0} .chk input{accent-color:var(--nav)}
+  .chk{display:flex;align-items:center;gap:6px;margin:2px 0} .chk input{accent-color:var(--nav)}
+  .lyr{margin:4px 0} .op{width:100%;height:4px;accent-color:var(--nav);margin:1px 0 4px;cursor:pointer}
+  .dl a{display:block;color:var(--nav);text-decoration:none;padding:2px 0;font-size:.76rem} .dl a:hover{text-decoration:underline}
   .btns{display:flex;flex-wrap:wrap;gap:5px}
   .btns button{border:1px solid #cdd7e0;background:#fff;color:var(--ink);border-radius:999px;padding:4px 9px;font-size:.76rem;cursor:pointer}
   .btns button.on{background:var(--nav);color:#fff;border-color:var(--nav)}
@@ -53,6 +55,12 @@
     <div class="btns" id="btns"></div>
     <div class="lbl">Base</div>
     <div class="base"><button data-b="claro" class="on">Claro</button><button data-b="sat">Satélite</button></div>
+    <div class="lbl">Datos y metadatos</div>
+    <div class="dl">
+      <a href="/humedales_tabla.csv" download>⬇ Tabla de humedales (CSV, 2.916)</a>
+      <a href="/humedales_poly.geojson" download>⬇ Humedales (GeoJSON)</a>
+      <a href="/cuencas.geojson" download>⬇ Cuencas (GeoJSON)</a>
+    </div>
   </div>
 </div>
 <div class="card legend" id="legend">
@@ -78,7 +86,8 @@ const VARS={
 };
 const VORDER=["p","cl","s","su"];
 let cvar="p";
-const LAYERS=[["region","Región de Valparaíso",true],["cuencas","Cuencas (BNA)",false],["poly","Humedales",true]];
+const LAYERS=[["region","Región de Valparaíso",true,100],["cuencas","Cuencas (BNA)",false,35],["poly","Humedales",true,88]];
+const OPTARGET={region:["region-line","line-opacity"],cuencas:["cuencas-fill","fill-opacity"],poly:["hpoly","fill-opacity"]};
 
 const map=new maplibregl.Map({container:"map",style:{version:8,sources:{
   claro:{type:"raster",tileSize:256,attribution:"© OpenStreetMap · © CARTO",
@@ -105,6 +114,7 @@ function drawLegend(){const V=VARS[cvar];let h="<b>"+V.leg+"</b>";
     CUENCAS.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c};opacity:.6"></span>${v}</div>`);}
   document.getElementById("legendbody").innerHTML=h;}
 
+function setOpacity(id,val){const[l,pr]=OPTARGET[id];if(map.getLayer(l))map.setPaintProperty(l,pr,val/100);}
 function setLayer(id,on){const v=on?"visible":"none";
   const ids={region:["region-line"],cuencas:["cuencas-fill","cuencas-line"],poly:["hpoly","hpoly-line"]}[id];
   ids.forEach(l=>{if(map.getLayer(l))map.setLayoutProperty(l,"visibility",v);});
@@ -118,9 +128,12 @@ function bindMin(cardId,btnId){const card=document.getElementById(cardId),btn=do
 bindMin("panel","pmin"); bindMin("legend","lmin");
 
 const lay=document.getElementById("layers");
-LAYERS.forEach(([id,txt,on])=>{const d=document.createElement("label");d.className="chk";
-  d.innerHTML=`<input type="checkbox" data-l="${id}" ${on?"checked":""}> ${txt}`;
-  d.querySelector("input").onchange=e=>setLayer(id,e.target.checked);lay.appendChild(d);});
+LAYERS.forEach(([id,txt,on,op])=>{const w=document.createElement("div");w.className="lyr";
+  w.innerHTML=`<label class="chk"><input type="checkbox" data-l="${id}" ${on?"checked":""}> ${txt}</label>`+
+    `<input type="range" class="op" data-op="${id}" min="0" max="100" value="${op}" title="Transparencia">`;
+  w.querySelector('input[type=checkbox]').onchange=e=>setLayer(id,e.target.checked);
+  w.querySelector('input[type=range]').oninput=e=>setOpacity(id,+e.target.value);
+  lay.appendChild(w);});
 const bt=document.getElementById("btns");
 VORDER.forEach(k=>{const b=document.createElement("button");b.textContent=VARS[k].label;b.dataset.k=k;b.onclick=()=>setColor(k);bt.appendChild(b);});
 document.querySelectorAll(".base button").forEach(b=>b.onclick=()=>{const sat=b.dataset.b==="sat";

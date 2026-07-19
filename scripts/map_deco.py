@@ -22,13 +22,18 @@ def add_grid(ax):
     ax.tick_params(labelsize=8)
 
 
-def add_scalebar(ax, km=50):
-    """Barra de escala en km, en la esquina inferior DERECHA."""
+def add_scalebar(ax, km=50, pos="right"):
+    """Barra de escala en km. pos: 'right' (inferior derecha), 'left' o 'center'."""
     x0, x1 = ax.get_xlim(); y0, y1 = ax.get_ylim()
     latmid = (y0 + y1) / 2.0
     deg = km / (111.32 * np.cos(np.radians(latmid)))
-    xb = x1 - (x1 - x0) * 0.06          # margen derecho
-    xa = xb - deg
+    if pos == "left":
+        xa = x0 + (x1 - x0) * 0.06
+    elif pos == "center":
+        xa = (x0 + x1) / 2.0 - deg / 2.0
+    else:                               # right
+        xa = x1 - (x1 - x0) * 0.06 - deg
+    xb = xa + deg
     ya = y0 + (y1 - y0) * 0.05
     ax.plot([xa, xb], [ya, ya], color="#2b2b2b", lw=2.6,
             solid_capstyle="butt", zorder=20)

@@ -26,7 +26,7 @@ def main():
     from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
     def deco7(a, lab):
-        add_grid(a); add_scalebar(a, 50); add_north(a, y=0.86)
+        add_grid(a); add_scalebar(a, 50, pos="center"); add_north(a, y=0.86)
         a.text(0.03, 0.985, lab, transform=a.transAxes, ha="left", va="top",
                fontsize=15, fontweight="bold", zorder=25,
                bbox=dict(boxstyle="round,pad=0.28", fc="white", ec="#333", lw=1.1))

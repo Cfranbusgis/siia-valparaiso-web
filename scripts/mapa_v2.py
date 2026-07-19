@@ -39,7 +39,12 @@ def main():
     aoi = gpd.read_file(AOI).to_crs(4326)
     grid_clip = gpd.clip(grid, aoi)
 
-    from map_deco import decorate
+    from map_deco import add_grid, add_north, add_scalebar
+    def deco3(a, lab):
+        add_grid(a); add_scalebar(a, 50); add_north(a, y=0.86)
+        a.text(0.03, 0.985, lab, transform=a.transAxes, ha="left", va="top",
+               fontsize=15, fontweight="bold", zorder=25,
+               bbox=dict(boxstyle="round,pad=0.28", fc="white", ec="#333", lw=1.1))
     fig, axes = plt.subplots(1, 2, figsize=(15, 9))
 
     ax = axes[0]
@@ -52,7 +57,7 @@ def main():
                  "1–19 jul 2026 vs climatología homogénea 1995–2025",
                  fontsize=11, fontweight="bold")
     ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud"); ax.set_aspect(1.18)
-    decorate(ax, km=50)
+    deco3(ax, "A")
 
     ax = axes[1]
     grid_clip.plot(ax=ax, column="pctl_empirico", cmap="YlGnBu",
@@ -69,7 +74,7 @@ def main():
                  "(percentil dentro del registro 1995–2025)",
                  fontsize=11, fontweight="bold")
     ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud"); ax.set_aspect(1.18)
-    decorate(ax, km=50)
+    deco3(ax, "B")
 
     fig.suptitle("Río atmosférico jul-2026, Región de Valparaíso — anomalía corregida "
                  "(corrección espacial de residuos validada por LOO)",
