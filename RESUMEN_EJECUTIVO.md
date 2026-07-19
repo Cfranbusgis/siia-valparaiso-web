@@ -29,6 +29,7 @@ precipitación concentrado en 48–60 horas.
 | Anomalía regional media | +313 % | **+111 %** |
 | Rareza (mediana regional) | z = 3,74 | **percentil empírico 86 del registro de 21 años** |
 | Humedales en condición inusual | 1.364 con z > 3 (47 %) | **379 ≥ P90 (13 %); 214 sobre el máximo del registro** |
+| Prioridad territorial (exposición compuesta) | 671 de los z > 3, índice sin calibrar | **núcleo robusto de 202 humedales, invariante a la ponderación** |
 | Máximo observado en 24 h | 120,1 mm (La Dormida, red DMC/DGAC) | ídem (dato observacional) |
 
 Lectura: un evento **notable, pero no excepcional a escala regional** —más del
@@ -82,6 +83,13 @@ superaba z > 3, proporción imposible bajo el supuesto de normalidad.
 6. **Motor del evento:** IVT propio (integración 1000–300 hPa) y clasificación
    en la escala de Ralph et al. (2019), coherente con la clasificación
    operacional.
+7. **Exposición compuesta (recalibrada):** componente meteorológica desde el
+   percentil empírico corregido, componente topográfica desde el TWI (DEM
+   250 m), evaluadas sobre el conjunto ≥ P90. Sin registros de anegamiento que
+   permitan calibrar la ponderación, esta se somete a análisis de sensibilidad
+   (30/70–70/30): el ordenamiento es invariante (Spearman ≥ 0,94) y 202
+   humedales mantienen la categoría alta bajo cualquier ponderación (núcleo
+   robusto; encabezan Casablanca, Quillota, Quilpué y Limache).
 
 ## 5. Decisiones metodológicas
 
@@ -94,7 +102,7 @@ superaba z > 3, proporción imposible bajo el supuesto de normalidad.
 | D5 | Corrección elegida solo por desempeño fuera de muestra | Evita ajustar a la muestra con n = 14 |
 | D6 | Rareza por percentil empírico, no por umbral gaussiano | Distribución sesgada y cero-inflada; el z se conserva como complemento |
 | D7 | Distinción motor (IVT/AR) / expresión (anomalía) | Cadenas de evidencia independientes |
-| D8 | Índice de exposición compuesta 50/50 declarado como no calibrado | Transparencia; recalibración programada sobre el conjunto ≥ P90 |
+| D8 | Ponderación del índice compuesto por análisis de sensibilidad + núcleo robusto | Sin registros de anegamiento no hay calibración contra terreno; se reporta lo invariante a la ponderación |
 | D9 | Trazabilidad v1 → v2 visible en el propio informe | La corrección es parte del resultado, no una fe de erratas |
 
 ## 6. Entregables
@@ -119,13 +127,15 @@ superaba z > 3, proporción imposible bajo el supuesto de normalidad.
    puede afirmarse que excede el percentil ≈95.
 4. Los 2.916 humedales heredan el valor de ≤157 celdas (pseudo-réplica); los
    recuentos describen superficie expuesta, no unidades independientes.
-5. El índice de exposición compuesta mantiene la selección previa a la
-   corrección y una ponderación 50/50 sin calibrar.
+5. La ponderación del índice de exposición compuesta no está calibrada contra
+   registros de anegamiento; en su lugar se reporta su sensibilidad
+   (30/70–70/30) y un núcleo robusto de 202 humedales invariante a ella.
 
 ## 8. Líneas de trabajo
 
-- Recalcular la exposición compuesta sobre el conjunto ≥ P90 y calibrar su
-  ponderación contra registros de anegamiento.
+- Validar las zonas de convergencia del índice compuesto (recalculado sobre el
+  conjunto ≥ P90) contra registros de anegamiento observados, para calibrar la
+  ponderación contra terreno.
 - Acoplar IVT pronosticado (anticipación, no solo caracterización).
 - Integrar condición ecológica (NDVI, LST) de los humedales.
 - Consolidar la ventana reciente con ERA5-Land cuando publique el periodo y

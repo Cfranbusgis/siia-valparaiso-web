@@ -63,6 +63,11 @@ La cadena metodológica, documentada por especificación en
 6. **Motor del evento** (`ivt_evento.py`): transporte integrado de vapor (IVT)
    propio — máximo 819 kg m⁻¹ s⁻¹ el 16 de julio, 82 h sobre umbral AR —
    consistente con la clasificación operacional AR4.
+7. **Exposición compuesta recalibrada** (`exposicion_v2.py`): componente
+   meteorológica desde el percentil empírico corregido y topográfica desde el
+   TWI, sobre el conjunto ≥ P90; la ponderación se somete a análisis de
+   sensibilidad (30/70–70/30) y se reporta el núcleo robusto de 202 humedales
+   invariante a ella.
 
 Las limitaciones vigentes (densidad de la red de estaciones, transferencia de la
 corrección de 24 h al acumulado, resolución de percentiles con 21 años,

@@ -42,6 +42,7 @@ STEPS = [
     ("anomalia_v2.py", "Anomalía v2: clima homogéneo + percentiles empíricos", False),
     ("mapa_v2.py", "Mapa v2 (anomalía corregida + percentil empírico)", False),
     ("mapa_humedales_v2.py", "Figura humedales v2 (percentil empírico)", False),
+    ("exposicion_v2.py", "Exposición compuesta v2 (sensibilidad + núcleo robusto)", False),
     ("build_report.py", "Ensambla el informe HTML", False),
     ("assemble_web.py", "Construye el sitio (public/)", False),
 ]
