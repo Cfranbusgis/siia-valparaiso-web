@@ -178,12 +178,13 @@ def build_png(dem, anom, x_km, y_km):
     fig.suptitle("Relieve de Valparaíso con la anomalía de precipitación · julio 2026", fontsize=13, fontweight="bold", y=0.97)
     ax.set_xlabel("Este-Oeste (km)", labelpad=12)
     ax.set_ylabel("Sur-Norte (km)", labelpad=12)
-    ax.zaxis.set_rotate_label(False)
-    ax.set_zlabel("Elevación (m)", rotation=90, labelpad=8)
+    ax.set_zlabel("")                       # etiqueta vertical manual (abajo)
     ax.set_zticks([(v/1000)*VE for v in (0,1000,2000,3000,4000,5000)])
     ax.set_zticklabels(["0","1000","2000","3000","4000","5000"])
     ax.set_box_aspect((x_span, y_span, z_span))
     ax.view_init(elev=27, azim=235)
+    fig.text(0.075, 0.47, "Elevación (m)", rotation=90, va="center", ha="center",
+             fontsize=11)
 
     cax = fig.add_axes([0.80, 0.22, 0.018, 0.5])
     cb = fig.colorbar(cm.ScalarMappable(norm=norm, cmap="YlGnBu"), cax=cax)
