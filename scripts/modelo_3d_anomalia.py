@@ -30,7 +30,10 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize, TwoSlopeNorm
 from matplotlib import cm
 
-from config import WORK_DIR as HERE, DEM_TIF as DEM, AOI_SHP as AOI
+HERE = Path(__file__).resolve().parent
+MODEL = Path(r"C:\Users\cfran\Desktop\MOD_EToPM-HS")
+DEM = MODEL / "03_inputs" / "DEM" / "DEM_250m_UTM19S_AOI.tif"
+AOI = MODEL / "03_inputs" / "AOI" / "RV.shp"
 VE = 8.0                       # exageracion vertical
 MAX_SIDE = 340                 # remuestreo para rendimiento
 
@@ -121,8 +124,8 @@ def build_html(dem, anom, x_km, y_km, transform, crs):
 
     fig = go.Figure([surf, scat])
     fig.update_layout(
-        title="Relieve de la Región de Valparaíso con la anomalía corregida (v2) "
-              "de julio de 2026<br><sup>Color de la superficie: anomalía corregida "
+        title="Relieve de la Región de Valparaíso con la anomalía de precipitación "
+              "corregida de julio de 2026<br><sup>Color de la superficie: anomalía corregida "
               "(%) · puntos: humedales ≥ P90 por exposición compuesta "
               "(exageración vertical ×8)</sup>",
         scene=dict(
@@ -174,7 +177,7 @@ def build_png(dem, anom, x_km, y_km):
     ax.plot_surface(x_km, y_km, np.ma.masked_invalid(z_plot), facecolors=face,
                     linewidth=0, antialiased=True, shade=False, rstride=1, cstride=1)
     fig.suptitle("Relieve de Valparaíso con la anomalía de precipitación corregida "
-                 "(v2) · julio 2026", fontsize=13, fontweight="bold", y=0.97)
+                 "· julio 2026", fontsize=13, fontweight="bold", y=0.97)
     ax.set_xlabel("Este-Oeste (km)", labelpad=12)
     ax.set_ylabel("Sur-Norte (km)", labelpad=12)
     ax.zaxis.set_rotate_label(False)
@@ -188,7 +191,7 @@ def build_png(dem, anom, x_km, y_km):
     cb = fig.colorbar(cm.ScalarMappable(norm=norm, cmap="YlGnBu"), cax=cax)
     cb.set_label("Anomalía de precipitación corregida (%)", rotation=90, labelpad=12)
     fig.text(0.76, 0.14, f"Exageración vertical: ×{VE:g}", fontsize=9)
-    fig.savefig(HERE / "modelo_3d_anomalia_valpo.png")
+    fig.savefig(HERE / "modelo_3d_anomalia_valpo.png", bbox_inches="tight", pad_inches=0.15)
     plt.close(fig)
     print("PNG 3D -> modelo_3d_anomalia_valpo.png")
 
