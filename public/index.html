@@ -170,7 +170,8 @@ la Costa, eje Marga-Marga&ndash;La Dormida).</p>
 <h2>Caracterización del río atmosférico</h2>
 <p>Conviene distinguir el <strong>motor</strong> del fenómeno de su <strong>expresión
 territorial</strong>. Un río atmosférico es una banda estrecha y alargada de
-transporte concentrado de vapor de agua; su intensidad se cuantifica mediante el
+transporte concentrado de vapor de agua, principal mecanismo de la precipitación
+extrema invernal en Chile central (Viale et al., 2018); su intensidad se cuantifica mediante el
 transporte integrado de vapor (IVT, en kg m⁻¹ s⁻¹) y su duración. El objeto central
 de este sistema es la <strong>expresión</strong> de ese motor en la superficie &mdash;
 la anomalía de precipitación sobre la Región de Valparaíso &mdash;, complementada con
@@ -218,7 +219,10 @@ secuencia física del fenómeno.</p>
   inmediato a los humedales. La gran mayoría de los humedales del inventario regional
   (&asymp;85 %) se sitúa bajo los 2.300 m y, por lo tanto, recibió precipitación líquida
   con aporte directo; los humedales altoandinos, sobre esa cota, habrían recibido nieve,
-  cuyo aporte hídrico queda diferido a la temporada de deshielo.</p>
+  cuyo aporte hídrico queda diferido a la temporada de deshielo. Las tormentas cálidas de
+  invierno en Chile central &mdash; con nivel de congelación alto, como esta &mdash;
+  amplían el área pluvial efectiva y, con ello, la respuesta hidrológica inmediata
+  (Garreaud, 2013).</p>
 </div>
 
 <h2>Arquitectura del sistema</h2>
@@ -277,7 +281,7 @@ en Chile central y centro-sur.</p>
 que se localiza. Para cuantificar cuán inusual fue el acumulado se emplea su percentil
 empírico dentro del registro 2003&ndash;2023, en lugar de umbrales gaussianos (z &gt; k),
 inadecuados para una variable sesgada y con años secos frecuentes como la precipitación
-quincenal. Con el acumulado corregido, <strong>379 humedales (13 %) quedan en o sobre el
+quincenal (McKee et al., 1993; Wilks, 2011). Con el acumulado corregido, <strong>379 humedales (13 %) quedan en o sobre el
 percentil 90</strong> de su registro local y <strong>214 superan el máximo de los 21
 años</strong>. Estos resultados caracterizan exclusivamente la exposición meteorológica;
 la respuesta hidrológica o ecológica depende de factores adicionales descritos en las
@@ -305,7 +309,8 @@ humedad (<em>TWI</em>; Beven y Kirkby, 1979), que identifica las posiciones
 de convergencia hídrica &mdash; fondos de valle y vegas &mdash; con mayor propensión a
 la saturación. AW3D30 es un modelo de superficie (DSM), que incluye dosel y
 edificaciones; su efecto sobre el TWI en fondos de valle es menor y se declara como
-fuente de incertidumbre.</p>
+fuente de incertidumbre, al igual que la sensibilidad del propio TWI al algoritmo y la
+resolución con que se calcula (S&oslash;rensen et al., 2006).</p>
 <p>Combinando la exposición meteorológica y la topográfica (TWI normalizado) se
 obtiene un <strong>índice de exposición compuesta</strong>. En su versión recalibrada
 (v2), la componente meteorológica se define desde el percentil empírico corregido
@@ -366,8 +371,8 @@ estaciones midieron un gradiente de 31 a 120 mm. El desajuste de ventana tempora
 descartado como explicación: alinear las ventanas empeora levemente el sesgo.</p>
 
 <h3>Elección de la corrección por validación cruzada</h3>
-<p>Se evaluaron tres correcciones candidatas mediante validación leave-one-out: se retira
-una estación, se ajusta la corrección con las trece restantes y se predice la estación
+<p>Se evaluaron tres correcciones candidatas mediante validación cruzada leave-one-out
+(Wilks, 2011): se retira una estación, se ajusta la corrección con las trece restantes y se predice la estación
 retirada. Las candidatas fueron un factor regional robusto (mediana del cociente
 observación/modelo), una corrección espacial de residuos (interpolación IDW de los
 residuos logarítmicos) y una corrección condicionada por la altitud (regresión en escala
@@ -386,7 +391,9 @@ de muestra). El error del modelo se asocia más a la distancia al núcleo del ev
 (correlación &minus;0,63 con el residuo logarítmico) que a la altitud (+0,33), lo que
 explica que la corrección espacial supere a la condicionada por altitud. La corrección,
 estimada sobre el máximo de 24 horas, se aplica al acumulado completo porque el evento del
-15&ndash;18 de julio aporta más del 95 % de ese acumulado.</p>
+15&ndash;18 de julio aporta más del 95 % de ese acumulado. Como toda corrección
+estadística, descansa en supuestos de transferencia que deben declararse y vigilarse
+(Maraun, 2016).</p>
 
 <div class="panel confidence">
   <h3>Nivel de confianza del diagnóstico <span class="conf-badge">Alta</span></h3>
@@ -602,9 +609,17 @@ que el área de estudio:</p>
   <li>Beven, K. J. y Kirkby, M. J. (1979). A physically based, variable contributing area
     model of basin hydrology. <em>Hydrological Sciences Bulletin</em>, 24(1), 43&ndash;69.
     DOI: 10.1080/02626667909491834</li>
+  <li>Garreaud, R. (2013). Warm winter storms in Central Chile. <em>Journal of
+    Hydrometeorology</em>, 14(5), 1515&ndash;1534. DOI: 10.1175/JHM-D-12-0135.1</li>
   <li>Hersbach, H., Bell, B., Berrisford, P. et al. (2020). The ERA5 global reanalysis.
     <em>Quarterly Journal of the Royal Meteorological Society</em>, 146(730),
     1999&ndash;2049. DOI: 10.1002/qj.3803</li>
+  <li>Maraun, D. (2016). Bias correcting climate change simulations &mdash; a critical
+    review. <em>Current Climate Change Reports</em>, 2(4), 211&ndash;220.
+    DOI: 10.1007/s40641-016-0050-x</li>
+  <li>McKee, T. B., Doesken, N. J. y Kleist, J. (1993). The relationship of drought
+    frequency and duration to time scales. En <em>Proceedings of the 8th Conference on
+    Applied Climatology</em> (pp. 179&ndash;184). American Meteorological Society.</li>
   <li>Mu&ntilde;oz-Sabater, J., Dutra, E., Agust&iacute;-Panareda, A. et al. (2021).
     ERA5-Land: a state-of-the-art global reanalysis dataset for land applications.
     <em>Earth System Science Data</em>, 13, 4349&ndash;4383.
@@ -616,10 +631,19 @@ que el área de estudio:</p>
     D., Schick, L. J. y Smallcomb, C. (2019). A scale to characterize the strength and
     impacts of atmospheric rivers. <em>Bulletin of the American Meteorological
     Society</em>, 100(2), 269&ndash;289. DOI: 10.1175/BAMS-D-18-0023.1</li>
+  <li>S&oslash;rensen, R., Zinko, U. y Seibert, J. (2006). On the calculation of the
+    topographic wetness index: evaluation of different methods based on field
+    observations. <em>Hydrology and Earth System Sciences</em>, 10, 101&ndash;112.
+    DOI: 10.5194/hess-10-101-2006</li>
   <li>Tadono, T., Ishida, H., Oda, F., Naito, S., Minakawa, K. e Iwamoto, H. (2014).
     Precise global DEM generation by ALOS PRISM. <em>ISPRS Annals of the Photogrammetry,
     Remote Sensing and Spatial Information Sciences</em>, II-4, 71&ndash;76.
     DOI: 10.5194/isprsannals-II-4-71-2014</li>
+  <li>Viale, M., Valenzuela, R., Garreaud, R. D. y Ralph, F. M. (2018). Impacts of
+    atmospheric rivers on precipitation in southern South America. <em>Journal of
+    Hydrometeorology</em>, 19(10), 1671&ndash;1687. DOI: 10.1175/JHM-D-18-0006.1</li>
+  <li>Wilks, D. S. (2011). <em>Statistical Methods in the Atmospheric Sciences</em>
+    (3.&ordf; ed.). Academic Press.</li>
   <li>Zambrano-Bigiarini, M., Nauditt, A., Birkel, C., Verbist, K. y Ribbe, L. (2017).
     Temporal and spatial evaluation of satellite-based rainfall estimates across the
     complex topographical and climatic gradients of Chile. <em>Hydrology and Earth System
