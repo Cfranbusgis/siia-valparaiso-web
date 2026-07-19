@@ -37,6 +37,11 @@ STEPS = [
     ("dmc_query.py", "Consulta API DMC/DGAC (opcional)", True),
     ("dmc_extract.py", "Extrae precipitación observada DMC", True),
     ("ivt_evento.py", "Transporte de vapor (IVT) + categoría AR", False),
+    ("auditoria_estaciones.py", "Auditoría de estaciones + ventana exacta 24 h", False),
+    ("correccion_loo.py", "Corrección de sesgo: validación leave-one-out", False),
+    ("anomalia_v2.py", "Anomalía v2: clima homogéneo + percentiles empíricos", False),
+    ("mapa_v2.py", "Mapa v2 (anomalía corregida + percentil empírico)", False),
+    ("mapa_humedales_v2.py", "Figura humedales v2 (percentil empírico)", False),
     ("build_report.py", "Ensambla el informe HTML", False),
     ("assemble_web.py", "Construye el sitio (public/)", False),
 ]

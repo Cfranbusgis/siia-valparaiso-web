@@ -1,0 +1,23 @@
+{
+  "evento": "Rio atmosferico sobre Chile central, 16-18 julio 2026",
+  "ventana": "1 julio - 18 julio 09:00 hora local, 2026",
+  "climatologia": "Open-Meteo Archive era5_seamless 2003-2023, 1-18 jul, por anho (homogenea con el reciente)",
+  "correccion": "IDW de residuos log(obs/modelo), 14 estaciones DMC robustas; elegida por LOO (RMSE 22.0 vs 54.2 mm)",
+  "celdas": 157,
+  "reciente_v1_media_mm": 192.3,
+  "reciente_v2_media_mm": 95.7,
+  "factor_medio": 0.496,
+  "clim_om_media_mm": 47.0,
+  "anom_v2_pct_media_grilla": 110.7,
+  "z_v2_medio_grilla": 1.29,
+  "pctl_empirico_mediano": 86.4,
+  "celdas_sobre_max_21a": 14,
+  "celdas_pctl_ge_90": 28,
+  "humedales_valpo": 2916,
+  "anom_v2_pct_media_humedales": 86.0,
+  "z_v2_medio_humedales": 1.0,
+  "humedales_pctl_ge_90": 379,
+  "humedales_sobre_max_21a": 214,
+  "humedales_z_v2_gt_2": 409,
+  "humedales_z_v2_gt_3": 54
+}

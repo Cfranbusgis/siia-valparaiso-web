@@ -1,0 +1,5 @@
+metodo,MAE_mm,RMSE_mm,sesgo_mm,ratio_medio
+sin_correccion,50.0,54.2,49.6,2.11
+factor_regional,23.1,26.6,-3.7,1.1
+residuos_idw,17.0,22.0,-2.0,1.08
+altitud,20.3,26.0,-5.1,1.06
