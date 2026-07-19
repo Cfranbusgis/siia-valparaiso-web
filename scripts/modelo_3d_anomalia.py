@@ -124,10 +124,8 @@ def build_html(dem, anom, x_km, y_km, transform, crs):
 
     fig = go.Figure([surf, scat])
     fig.update_layout(
-        title="Relieve de la Región de Valparaíso con la anomalía de precipitación "
-              "de julio de 2026<br><sup>Color de la superficie: anomalía corregida "
-              "(%) · puntos: humedales ≥ P90 por exposición compuesta "
-              "(exageración vertical ×8)</sup>",
+        title="Relieve de Valparaíso · anomalía de precipitación, julio 2026"
+              "<br><sup>Exageración vertical ×8 · puntos: humedales ≥ P90</sup>",
         scene=dict(
             xaxis_title="Distancia Este-Oeste (km)",
             yaxis_title="Distancia Sur-Norte (km)",
