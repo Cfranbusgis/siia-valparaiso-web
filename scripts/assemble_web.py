@@ -32,6 +32,7 @@ NAV = """
   font-size:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.15)">
   <strong style="letter-spacing:.04em">SIIA · Valparaíso</strong>
   <a href="/" style="color:#cfe6f2;text-decoration:none">Informe</a>
+  <a href="/mapa-interactivo.html" style="color:#cfe6f2;text-decoration:none">Mapa interactivo</a>
   <a href="/modelo-3d.html" style="color:#cfe6f2;text-decoration:none">Modelo 3D interactivo</a>
 </nav>
 """

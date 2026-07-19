@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa interactivo de humedales · SIIA Valparaíso</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  :root{--nav:#0b3d66;--ink:#12303f}
+  html,body{margin:0;height:100%;font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink)}
+  #map{position:absolute;inset:52px 0 0 0}
+  nav{position:fixed;top:0;left:0;right:0;height:52px;z-index:10;display:flex;gap:16px;
+    align-items:center;padding:0 18px;background:var(--nav);color:#fff;box-sizing:border-box;
+    box-shadow:0 2px 8px rgba(0,0,0,.15)}
+  nav strong{letter-spacing:.04em} nav a{color:#cfe6f2;text-decoration:none;font-size:.9rem}
+  nav a:hover{color:#fff}
+  .panel{position:absolute;top:66px;left:12px;z-index:5;background:rgba(255,255,255,.96);
+    border-radius:12px;padding:12px 14px;box-shadow:0 6px 18px rgba(0,0,0,.18);max-width:230px}
+  .panel h1{font-size:.95rem;margin:0 0 2px} .panel p{font-size:.76rem;color:#557;margin:0 0 8px}
+  .btns{display:flex;flex-wrap:wrap;gap:6px}
+  .btns button{border:1px solid #cdd7e0;background:#fff;color:var(--ink);border-radius:999px;
+    padding:5px 10px;font-size:.78rem;cursor:pointer}
+  .btns button.on{background:var(--nav);color:#fff;border-color:var(--nav)}
+  .legend{position:absolute;bottom:16px;left:12px;z-index:5;background:rgba(255,255,255,.96);
+    border-radius:10px;padding:10px 12px;box-shadow:0 6px 18px rgba(0,0,0,.18);font-size:.78rem}
+  .legend b{display:block;margin-bottom:6px;font-size:.8rem}
+  .row{display:flex;align-items:center;gap:7px;margin:2px 0}
+  .sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.15)}
+  .maplibregl-popup-content{font-size:.8rem;line-height:1.4;padding:10px 12px;border-radius:8px}
+  .maplibregl-popup-content b{color:var(--nav)}
+</style>
+</head>
+<body>
+<nav>
+  <strong>SIIA · Valparaíso</strong>
+  <a href="/">← Informe</a>
+  <a href="/modelo-3d.html">Modelo 3D</a>
+  <span style="margin-left:auto;font-size:.8rem;opacity:.85">Mapa interactivo de humedales</span>
+</nav>
+<div class="panel">
+  <h1>Humedales de Valparaíso</h1>
+  <p>2.916 humedales del inventario MMA. Clic en un punto para ver su ficha. Colorear por:</p>
+  <div class="btns" id="btns"></div>
+</div>
+<div class="legend" id="legend"></div>
+<div id="map"></div>
+<script>
+const VARS = {
+  p:  {label:"Percentil empírico", type:"grad",
+       stops:[[50,"#ffffcc"],[70,"#a1dab4"],[85,"#41b6c4"],[95,"#2c7fb8"],[100,"#253494"]],
+       fmt:v=>"P"+v.toFixed(0), leg:"Percentil del acumulado (registro 1995–2025)"},
+  cl: {label:"Amenaza de inundación", type:"cat",
+       cats:[["Muy Baja","#2c7bb6"],["Baja","#abd9e9"],["Moderada","#ffffbf"],
+             ["Alta","#fdae61"],["Muy Alta","#d7191c"]],
+       leg:"Clase de amenaza (exposición × susceptibilidad)"},
+  s:  {label:"Susceptibilidad", type:"grad",
+       stops:[[0,"#f7fcf0"],[0.2,"#bae4bc"],[0.4,"#7bccc4"],[0.55,"#2b8cbe"],[0.7,"#084081"]],
+       fmt:v=>v.toFixed(2), leg:"Susceptibilidad de inundación (terreno + suelo + ríos)"},
+  su: {label:"Retención del suelo", type:"grad",
+       stops:[[0,"#f6e8c3"],[0.35,"#dfc27d"],[0.5,"#80cdc1"],[0.7,"#35978f"],[1,"#01665e"]],
+       fmt:v=>v.toFixed(2), leg:"Retención hídrica del suelo (CIREN + HWSD2)"},
+  cu: {label:"Cuenca", type:"cat",
+       cats:[["Rio Aconcagua","#4e79a7"],["Costeras entre Aconcagua y Maipo","#59a14f"],
+             ["Costeras Ligua-Aconcagua","#f28e2b"],["Rio Petorca","#e15759"],
+             ["Rio Ligua","#b07aa1"],["Rio Maipo","#76b7b2"]],
+       leg:"Cuenca hidrográfica (BNA)"},
+};
+const ORDER=["p","cl","s","su","cu"];
+let current="p";
+
+const map=new maplibregl.Map({
+  container:"map",
+  style:{version:8,
+    sources:{carto:{type:"raster",
+      tiles:["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+             "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+             "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"],
+      tileSize:256, attribution:"© OpenStreetMap · © CARTO"}},
+    layers:[{id:"carto",type:"raster",source:"carto"}]},
+  center:[-71.05,-32.9], zoom:7.4});
+map.addControl(new maplibregl.NavigationControl(),"top-right");
+map.addControl(new maplibregl.ScaleControl({unit:"metric"}),"bottom-right");
+
+function colorExpr(k){
+  const V=VARS[k];
+  if(V.type==="grad"){
+    const e=["interpolate",["linear"],["coalesce",["get",k],-1]];
+    e.push(-1,"#d9d9d9"); V.stops.forEach(([v,c])=>{e.push(v,c);}); return e;
+  }else{
+    const e=["match",["coalesce",["get",k],"?"]];
+    V.cats.forEach(([v,c])=>{e.push(v,c);}); e.push("#bbb"); return e;
+  }
+}
+function radiusExpr(){
+  return ["interpolate",["linear"],["zoom"],6,2.2,9,4.5,12,9];
+}
+function setVar(k){
+  current=k;
+  map.setPaintProperty("hum","circle-color",colorExpr(k));
+  document.querySelectorAll("#btns button").forEach(b=>b.classList.toggle("on",b.dataset.k===k));
+  drawLegend(k);
+}
+function drawLegend(k){
+  const V=VARS[k]; let h="<b>"+V.leg+"</b>";
+  if(V.type==="cat"){ V.cats.forEach(([v,c])=>{h+=`<div class="row"><span class="sw" style="background:${c}"></span>${v}</div>`;});
+    h+=`<div class="row"><span class="sw" style="background:#bbb"></span>sin dato</div>`;}
+  else{ V.stops.forEach(([v,c])=>{h+=`<div class="row"><span class="sw" style="background:${c}"></span>${V.fmt(v)}</div>`;});}
+  document.getElementById("legend").innerHTML=h;
+}
+const bt=document.getElementById("btns");
+ORDER.forEach(k=>{const b=document.createElement("button");b.textContent=VARS[k].label;b.dataset.k=k;
+  b.onclick=()=>setVar(k);bt.appendChild(b);});
+
+map.on("load",()=>{
+  map.addSource("h",{type:"geojson",data:"/humedales.geojson"});
+  map.addLayer({id:"hum",type:"circle",source:"h",
+    paint:{"circle-color":colorExpr(current),"circle-radius":radiusExpr(),
+      "circle-opacity":0.9,"circle-stroke-width":0.4,"circle-stroke-color":"rgba(20,40,60,.5)"}});
+  setVar("p");
+  const pop=new maplibregl.Popup({closeButton:true,maxWidth:"260px"});
+  map.on("click","hum",e=>{
+    const p=e.features[0].properties;
+    pop.setLngLat(e.lngLat).setHTML(
+      `<b>${p.n}</b><br>${p.c}${p.cu?" · "+p.cu:""}<br>`+
+      `Percentil: <b>P${(+p.p).toFixed(0)}</b> · Acumulado ${(+p.mm).toFixed(0)} mm<br>`+
+      `Amenaza de inundación: <b>${p.cl}</b><br>`+
+      `Susceptibilidad ${(+p.s).toFixed(2)} · Retención suelo ${p.su!=null?(+p.su).toFixed(2):"s/d"}`
+    ).addTo(map);
+  });
+  map.on("mouseenter","hum",()=>map.getCanvas().style.cursor="pointer");
+  map.on("mouseleave","hum",()=>map.getCanvas().style.cursor="");
+});
+</script>
+</body>
+</html>
