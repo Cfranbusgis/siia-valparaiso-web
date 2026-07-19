@@ -159,8 +159,8 @@ def main():
     # --- resumen v2 ---
     resumen = {
         "evento": "Rio atmosferico sobre Chile central, 16-18 julio 2026",
-        "ventana": "1 julio - 18 julio 09:00 hora local, 2026",
-        "climatologia": ("Open-Meteo Archive era5_seamless 2003-2023, 1-18 jul, "
+        "ventana": "1 julio - 19 julio 03:00 hora local, 2026",
+        "climatologia": ("Open-Meteo Archive era5_seamless 2003-2023, 1-19 jul, "
                          "por anho (homogenea con el reciente)"),
         "correccion": ("IDW de residuos log(obs/modelo), 14 estaciones DMC "
                        "robustas; elegida por LOO (RMSE 22.0 vs 54.2 mm)"),

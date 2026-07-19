@@ -1,35 +1,35 @@
 {
   "definicion": "expo_met=(pctl-50)/50 en [0,1]; expo_topo=TWI norm 2-98; compuesto w*met+(1-w)*topo; alta >= 0.6; conjunto >= P90",
   "twi_fuente": "twi_valpo_30m.tif",
-  "n_conjunto_p90": 379,
-  "expo_met_media_p90": 0.87,
+  "n_conjunto_p90": 468,
+  "expo_met_media_p90": 0.873,
   "expo_topo_media_p90": 0.544,
   "alta_por_peso": {
-    "w30": 172,
-    "w50": 276,
-    "w70": 377
+    "w30": 218,
+    "w50": 347,
+    "w70": 467
   },
   "sensibilidad_spearman": {
-    "spearman_w30_w50": 0.993,
-    "spearman_w50_w70": 0.976,
-    "spearman_w30_w70": 0.949
+    "spearman_w30_w50": 0.994,
+    "spearman_w50_w70": 0.975,
+    "spearman_w30_w70": 0.947
   },
   "sensibilidad_jaccard_alta": {
-    "jaccard_alta_w30_w50": 0.623,
-    "jaccard_alta_w50_w70": 0.732,
-    "jaccard_alta_w30_w70": 0.456
+    "jaccard_alta_w30_w50": 0.628,
+    "jaccard_alta_w50_w70": 0.743,
+    "jaccard_alta_w30_w70": 0.467
   },
-  "nucleo_robusto_alta": 172,
-  "union_alta": 377,
-  "pct_nucleo_de_union": 45.6,
+  "nucleo_robusto_alta": 218,
+  "union_alta": 467,
+  "pct_nucleo_de_union": 46.7,
   "top_comunas_nucleo": {
     "Casablanca": 50,
     "Limache": 24,
     "Algarrobo": 22,
     "Quilpué": 15,
     "Valparaíso": 15,
-    "Quillota": 13,
-    "Concón": 9,
-    "Viña del Mar": 6
+    "Quillota": 14,
+    "La Ligua": 13,
+    "Concón": 9
   }
 }

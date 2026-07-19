@@ -18,14 +18,13 @@ import time
 import urllib.request
 from pathlib import Path
 
-import config
-OUT = config.WORK_DIR
+from config import WORK_DIR as OUT
 CLIM = OUT / "clim_valpo.csv"
 FORECAST = "https://api.open-meteo.com/v1/forecast"
 CHUNK = 50
-D0, D1 = "2026-07-01", "2026-07-17"        # dias completos (totales diarios)
-HP_DAY = "2026-07-18"                       # dia parcial (horario)
-H0, H1 = f"{HP_DAY}T00:00", f"{HP_DAY}T09:00"
+D0, D1 = "2026-07-01", "2026-07-18"        # dias completos (totales diarios)
+HP_DAY = "2026-07-19"                       # dia parcial (horario)
+H0, H1 = f"{HP_DAY}T00:00", f"{HP_DAY}T03:00"
 
 
 def load_cells():

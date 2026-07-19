@@ -30,11 +30,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize, TwoSlopeNorm
 from matplotlib import cm
 
-import config
-HERE = config.WORK_DIR
-MODEL = config.MODEL_DIR
-DEM = config.DEM_TIF
-AOI = config.AOI_SHP
+from config import WORK_DIR as HERE, DEM_TIF as DEM, AOI_SHP as AOI
 VE = 8.0                       # exageracion vertical
 MAX_SIDE = 340                 # remuestreo para rendimiento
 
@@ -55,7 +51,7 @@ def load_dem_downsampled():
 
 def drape_anomaly(dem, transform, crs):
     """Asigna a cada pixel del DEM la anomalia de la celda mas cercana (KDTree)."""
-    g = pd.read_csv(HERE / "anomaly_grid_valpo.csv")
+    g = pd.read_csv(HERE / "anomaly_grid_valpo_v2.csv")
     gpts = gpd.GeoDataFrame(g, geometry=gpd.points_from_xy(g.lon, g.lat), crs=4326)
     gpts = gpts.to_crs(crs)
     tree = cKDTree(np.c_[gpts.geometry.x, gpts.geometry.y])
@@ -65,7 +61,7 @@ def drape_anomaly(dem, transform, crs):
     xs, ys = xy(transform, rr.ravel(), cc.ravel())
     xs = np.array(xs); ys = np.array(ys)
     _, idx = tree.query(np.c_[xs, ys])
-    anom = gpts["anomaly_pct"].values[idx].reshape(H, W)
+    anom = gpts["anomaly_v2_pct"].values[idx].reshape(H, W)
     anom[np.isnan(dem)] = np.nan
     # coordenadas locales en km
     x_km = (xs.reshape(H, W) - np.nanmin(xs)) / 1000.0
@@ -74,7 +70,7 @@ def drape_anomaly(dem, transform, crs):
 
 
 def wetlands_xyz(dem, transform, crs):
-    hu = gpd.read_file(HERE / "humedales_z_gt3_topo.geojson").to_crs(crs)
+    hu = gpd.read_file(HERE / "humedales_p90_exposicion_v2.geojson").to_crs(crs)
     pts = hu.representative_point()
     inv = ~transform
     cols, rows = inv * (pts.x.values, pts.y.values)
@@ -99,8 +95,8 @@ def build_html(dem, anom, x_km, y_km, transform, crs):
 
     surf = go.Surface(
         z=z_plot, x=xline, y=yline, surfacecolor=anom,
-        colorscale="YlGnBu", cmin=0, cmax=400,
-        colorbar=dict(title="Anomalía (%)", len=0.7, x=1.02, y=0.5),
+        colorscale="YlGnBu", cmin=-50, cmax=250,
+        colorbar=dict(title="Anomalía corregida (%)", len=0.7, x=1.02, y=0.5),
         lighting=dict(ambient=0.5, diffuse=0.7, specular=0.1, roughness=0.9),
         lightposition=dict(x=100000, y=100000, z=80000),
         hovertemplate="E-O %{x:.0f} km<br>S-N %{y:.0f} km<br>Anomalía %{surfacecolor:.0f} %<extra></extra>",
@@ -116,17 +112,19 @@ def build_html(dem, anom, x_km, y_km, transform, crs):
     hz = (np.nan_to_num(elev, nan=0.0) / 1000.0) * VE + 0.05
     scat = go.Scatter3d(
         x=hx, y=hy, z=hz, mode="markers",
-        marker=dict(size=2.4, color=hu["expo_comp"].values, colorscale="Inferno",
+        marker=dict(size=2.4, color=hu["expo_comp_w50"].values, colorscale="Inferno",
                     cmin=0.3, cmax=0.9, showscale=False, opacity=0.85),
-        text=[f"{n}<br>exposición compuesta {e:.2f}"
-              for n, e in zip(hu["nom_humed"], hu["expo_comp"])],
-        hovertemplate="%{text}<extra></extra>", name="humedales z>3")
+        text=[f"{n}<br>percentil P{p:.0f} · exposición compuesta {e:.2f}"
+              for n, p, e in zip(hu["nom_humed"], hu["pctl_empirico"],
+                                 hu["expo_comp_w50"])],
+        hovertemplate="%{text}<extra></extra>", name="humedales ≥ P90")
 
     fig = go.Figure([surf, scat])
     fig.update_layout(
-        title="Relieve de la Región de Valparaíso con la anomalía de precipitación "
-              "de julio de 2026<br><sup>Color de la superficie: anomalía (%) · "
-              "puntos: humedales con z>3 (exageración vertical ×8)</sup>",
+        title="Relieve de la Región de Valparaíso con la anomalía corregida (v2) "
+              "de julio de 2026<br><sup>Color de la superficie: anomalía corregida "
+              "(%) · puntos: humedales ≥ P90 por exposición compuesta "
+              "(exageración vertical ×8)</sup>",
         scene=dict(
             xaxis_title="Distancia Este-Oeste (km)",
             yaxis_title="Distancia Sur-Norte (km)",
@@ -166,7 +164,7 @@ def build_png(dem, anom, x_km, y_km):
     y_span = float(np.nanmax(y_km) - np.nanmin(y_km))
     z_span = max(float(np.nanmax(z_plot) - np.nanmin(z_plot)), 0.2 * max(x_span, y_span))
 
-    norm = TwoSlopeNorm(vmin=0, vcenter=100, vmax=400)
+    norm = TwoSlopeNorm(vmin=-50, vcenter=0, vmax=250)
     face = cm.YlGnBu(norm(np.nan_to_num(anom, nan=0.0)))
     face[..., -1] = np.where(np.isnan(dem), 0.0, 1.0)
 
@@ -175,8 +173,8 @@ def build_png(dem, anom, x_km, y_km):
     ax.set_proj_type("ortho")
     ax.plot_surface(x_km, y_km, np.ma.masked_invalid(z_plot), facecolors=face,
                     linewidth=0, antialiased=True, shade=False, rstride=1, cstride=1)
-    fig.suptitle("Relieve de Valparaíso con la anomalía de precipitación · julio 2026",
-                 fontsize=13, fontweight="bold", y=0.97)
+    fig.suptitle("Relieve de Valparaíso con la anomalía de precipitación corregida "
+                 "(v2) · julio 2026", fontsize=13, fontweight="bold", y=0.97)
     ax.set_xlabel("Este-Oeste (km)", labelpad=12)
     ax.set_ylabel("Sur-Norte (km)", labelpad=12)
     ax.zaxis.set_rotate_label(False)
@@ -188,7 +186,7 @@ def build_png(dem, anom, x_km, y_km):
 
     cax = fig.add_axes([0.80, 0.22, 0.018, 0.5])
     cb = fig.colorbar(cm.ScalarMappable(norm=norm, cmap="YlGnBu"), cax=cax)
-    cb.set_label("Anomalía de precipitación (%)", rotation=90, labelpad=12)
+    cb.set_label("Anomalía de precipitación corregida (%)", rotation=90, labelpad=12)
     fig.text(0.76, 0.14, f"Exageración vertical: ×{VE:g}", fontsize=9)
     fig.savefig(HERE / "modelo_3d_anomalia_valpo.png")
     plt.close(fig)
