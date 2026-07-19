@@ -42,7 +42,7 @@ def main():
     from map_deco import add_grid, add_north, add_scalebar
     def deco3(a, lab):
         add_grid(a); add_scalebar(a, 50); add_north(a, y=0.86)
-        a.text(0.03, 0.985, lab, transform=a.transAxes, ha="left", va="top",
+        a.text(0.97, 0.985, lab, transform=a.transAxes, ha="right", va="top",
                fontsize=15, fontweight="bold", zorder=25,
                bbox=dict(boxstyle="round,pad=0.28", fc="white", ec="#333", lw=1.1))
     fig, axes = plt.subplots(1, 2, figsize=(15, 9))
@@ -53,9 +53,9 @@ def main():
                    edgecolor="white", linewidth=0.15, legend=True,
                    legend_kwds={"label": "Anomalía corregida (%)", "shrink": 0.62})
     aoi.boundary.plot(ax=ax, color="#111", linewidth=1.1)
-    ax.set_title("Anomalía corregida (reciente corregido por obs. DMC)\n"
-                 "1–19 jul 2026 vs climatología homogénea 1995–2025",
-                 fontsize=11, fontweight="bold")
+    ax.set_title("Anomalía corregida por observaciones\n"
+                 "1–19 jul 2026 vs climatología 1995–2025",
+                 fontsize=11.5, fontweight="bold")
     ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud"); ax.set_aspect(1.18)
     deco3(ax, "A")
 
@@ -63,16 +63,16 @@ def main():
     grid_clip.plot(ax=ax, column="pctl_empirico", cmap="YlGnBu",
                    vmin=50, vmax=100, edgecolor="white", linewidth=0.15,
                    legend=True,
-                   legend_kwds={"label": "Percentil empírico (registro 30 años)",
+                   legend_kwds={"label": "Percentil empírico, 30 años",
                                 "shrink": 0.62})
     sup = grid_clip[grid_clip.supera_max_21a]
     if len(sup):
         sup.plot(ax=ax, facecolor="none", edgecolor="#b5341f",
                  hatch="///", linewidth=0.6)
     aoi.boundary.plot(ax=ax, color="#111", linewidth=1.1)
-    ax.set_title("Rareza empírica del acumulado corregido\n"
-                 "(percentil dentro del registro 1995–2025)",
-                 fontsize=11, fontweight="bold")
+    ax.set_title("Rareza empírica del acumulado\n"
+                 "percentil dentro del registro 1995–2025",
+                 fontsize=11.5, fontweight="bold")
     ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud"); ax.set_aspect(1.18)
     deco3(ax, "B")
 

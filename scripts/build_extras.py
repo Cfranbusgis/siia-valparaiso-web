@@ -94,9 +94,8 @@ def main():
     for _, s in dmc_in.sort_values("agua24h_mm", ascending=False).head(6).iterrows():
         ax.annotate(f"{s.agua24h_mm:.0f}", (s.geometry.x, s.geometry.y), fontsize=7,
                     xytext=(3, 3), textcoords="offset points", zorder=6)
-    ax.set_title("Contraste modelo sin corregir vs observaciones DMC/DGAC\n"
-                 "(las estaciones con mayor registro coinciden con las celdas de mayor anomalía)",
-                 fontsize=10.5, fontweight="bold")
+    ax.set_title("Contraste: modelo sin corregir vs observaciones DMC/DGAC",
+                 fontsize=11.5, fontweight="bold")
     ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud"); ax.set_aspect(1.18)
     from map_deco import decorate
     decorate(ax, km=50)

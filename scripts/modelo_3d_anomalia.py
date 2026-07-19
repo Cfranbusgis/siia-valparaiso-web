@@ -124,8 +124,9 @@ def build_html(dem, anom, x_km, y_km, transform, crs):
 
     fig = go.Figure([surf, scat])
     fig.update_layout(
-        title="Relieve de Valparaíso · anomalía de precipitación, julio 2026"
-              "<br><sup>Exageración vertical ×8 · puntos: humedales ≥ P90</sup>",
+        title=dict(text="Relieve de Valparaíso · anomalía de precipitación, julio 2026"
+                        "<br><sup>Exageración vertical ×8 · puntos: humedales ≥ P90</sup>",
+                   x=0.5, xanchor="center"),
         scene=dict(
             xaxis_title="Distancia Este-Oeste (km)",
             yaxis_title="Distancia Sur-Norte (km)",
@@ -170,7 +171,7 @@ def build_png(dem, anom, x_km, y_km):
     face[..., -1] = np.where(np.isnan(dem), 0.0, 1.0)
 
     fig = plt.figure(figsize=(11, 6.6), dpi=115)
-    ax = fig.add_axes([0.03, 0.06, 0.70, 0.86], projection="3d")
+    ax = fig.add_axes([0.10, 0.05, 0.66, 0.88], projection="3d")
     ax.set_proj_type("ortho")
     ax.plot_surface(x_km, y_km, np.ma.masked_invalid(z_plot), facecolors=face,
                     linewidth=0, antialiased=True, shade=False, rstride=1, cstride=1)
@@ -178,7 +179,7 @@ def build_png(dem, anom, x_km, y_km):
     ax.set_xlabel("Este-Oeste (km)", labelpad=12)
     ax.set_ylabel("Sur-Norte (km)", labelpad=12)
     ax.zaxis.set_rotate_label(False)
-    ax.set_zlabel("Elevación (m)", rotation=90, labelpad=16)
+    ax.set_zlabel("Elevación (m)", rotation=90, labelpad=8)
     ax.set_zticks([(v/1000)*VE for v in (0,1000,2000,3000,4000,5000)])
     ax.set_zticklabels(["0","1000","2000","3000","4000","5000"])
     ax.set_box_aspect((x_span, y_span, z_span))
@@ -188,8 +189,7 @@ def build_png(dem, anom, x_km, y_km):
     cb = fig.colorbar(cm.ScalarMappable(norm=norm, cmap="YlGnBu"), cax=cax)
     cb.set_label("Anomalía de precipitación (%)", rotation=90, labelpad=12)
     fig.text(0.76, 0.14, f"Exageración vertical: ×{VE:g}", fontsize=9)
-    fig.savefig(HERE / "modelo_3d_anomalia_valpo.png", bbox_inches="tight",
-                pad_inches=0.1, dpi=115)
+    fig.savefig(HERE / "modelo_3d_anomalia_valpo.png", dpi=115)
     plt.close(fig)
     print("PNG 3D -> modelo_3d_anomalia_valpo.png")
 

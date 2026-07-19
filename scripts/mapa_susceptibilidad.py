@@ -27,7 +27,7 @@ def main():
 
     def deco7(a, lab):
         add_grid(a); add_scalebar(a, 50, pos="center"); add_north(a, y=0.86)
-        a.text(0.03, 0.985, lab, transform=a.transAxes, ha="left", va="top",
+        a.text(0.97, 0.985, lab, transform=a.transAxes, ha="right", va="top",
                fontsize=15, fontweight="bold", zorder=25,
                bbox=dict(boxstyle="round,pad=0.28", fc="white", ec="#333", lw=1.1))
 
@@ -36,11 +36,11 @@ def main():
     # --- Panel A: susceptibilidad (colorbar inset, no encoge el eje) ---
     aoi.boundary.plot(ax=ax[0], color="#111", linewidth=1.0)
     huc.plot(ax=ax[0], column="susc_inundacion", cmap="YlGnBu", vmin=0, vmax=0.7, markersize=6)
-    cax = inset_axes(ax[0], width="3.4%", height="34%", loc="lower left", borderpad=1.6)
+    cax = inset_axes(ax[0], width="3.4%", height="34%", loc="lower right", borderpad=1.6)
     cb = fig.colorbar(ScalarMappable(norm=Normalize(0, 0.7), cmap="YlGnBu"), cax=cax)
     cb.set_label("Susceptibilidad de inundación", fontsize=8); cb.ax.tick_params(labelsize=7)
-    ax[0].set_title("Susceptibilidad de inundación\n(TWI + concavidad + suelo + ríos)",
-                    fontsize=10.5, fontweight="bold")
+    ax[0].set_title("Susceptibilidad de inundación",
+                    fontsize=11.5, fontweight="bold")
     ax[0].set_xlabel("Longitud"); ax[0].set_ylabel("Latitud"); ax[0].set_aspect(1.18)
     deco7(ax[0], "A")
 
@@ -54,10 +54,10 @@ def main():
         sub=pri[pri.clase_amenaza==k]
         if len(sub): sub.plot(ax=ax[1], color=cols[k], markersize=10)
     ax[1].legend(handles=[mpatches.Patch(color=cols[k], label=k) for k in orden],
-                 title="Amenaza de inundación", loc="lower left", fontsize=8, title_fontsize=8,
+                 title="Amenaza de inundación", loc="lower right", fontsize=8, title_fontsize=8,
                  framealpha=0.95)
-    ax[1].set_title("Amenaza de inundación en 5 clases\n(humedales ≥ P90)",
-                    fontsize=10.5, fontweight="bold")
+    ax[1].set_title("Amenaza de inundación en 5 clases",
+                    fontsize=11.5, fontweight="bold")
     ax[1].set_xlabel("Longitud"); ax[1].set_ylabel("Latitud"); ax[1].set_aspect(1.18)
     deco7(ax[1], "B")
 

@@ -54,8 +54,8 @@ def main():
                                        "(registro 1995–2025)", "shrink": 0.62})
     aoi.boundary.plot(ax=ax, color="#111", linewidth=1.1)
     ax.set_title("Exposición meteorológica de los humedales\n"
-                 "Percentil empírico del acumulado (registro 1995–2025)",
-                 fontsize=11, fontweight="bold")
+                 "Percentil empírico del acumulado, 1995–2025",
+                 fontsize=11.5, fontweight="bold")
     ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud"); ax.set_aspect(1.18)
     decorate(ax, km=50)
     fig.tight_layout()

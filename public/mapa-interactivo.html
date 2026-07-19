@@ -151,15 +151,22 @@ map.on("load",()=>{
   map.addLayer({id:"hpoly",type:"fill",source:"hp",paint:{"fill-color":colorExpr("p"),"fill-opacity":0.88,"fill-outline-color":"#12303f"}});
   map.addLayer({id:"hpoly-line",type:"line",source:"hp",paint:{"line-color":"#12303f","line-width":0.35}});
   setColor("p");
-  const pop=new maplibregl.Popup({closeButton:true,maxWidth:"260px"});
+  const pop=new maplibregl.Popup({closeButton:true,maxWidth:"280px"});
   map.on("click","hpoly",e=>{const p=e.features[0].properties;
     pop.setLngLat(e.lngLat).setHTML(
-      `<b>${p.n}</b><br>${p.c}${p.cu?" · "+p.cu:""}<br>`+
+      `<b>${p.n}</b><br>${p.c}${p.cu?" · Cuenca "+p.cu:""}<br>`+
+      (p.t2?`Tipo de humedal: <b>${p.t2}</b><br>`:"")+
       `Percentil: <b>P${(+p.p).toFixed(0)}</b> · Acumulado ${(+p.mm).toFixed(0)} mm<br>`+
       `Amenaza de inundación: <b>${p.cl}</b><br>`+
-      `Susceptibilidad ${(+p.s).toFixed(2)} · Retención suelo ${p.su!=null?(+p.su).toFixed(2):"s/d"}`).addTo(map);});
+      `Susceptibilidad ${(+p.s).toFixed(2)} · Retención suelo ${p.su!=null?(+p.su).toFixed(2):"s/d"}`+
+      (p.se?`<br>Serie de suelo: <b>${p.se}</b>`:"")).addTo(map);});
   map.on("mouseenter","hpoly",()=>map.getCanvas().style.cursor="pointer");
   map.on("mouseleave","hpoly",()=>map.getCanvas().style.cursor="");
+  // nombre de cuenca al pasar el cursor
+  const cupop=new maplibregl.Popup({closeButton:false,closeOnClick:false,maxWidth:"240px"});
+  map.on("mousemove","cuencas-fill",e=>{map.getCanvas().style.cursor="help";
+    cupop.setLngLat(e.lngLat).setHTML(`<b>Cuenca:</b> ${e.features[0].properties.NOM_CUEN}`).addTo(map);});
+  map.on("mouseleave","cuencas-fill",()=>{cupop.remove();map.getCanvas().style.cursor="";});
 });
 </script>
 </body>
