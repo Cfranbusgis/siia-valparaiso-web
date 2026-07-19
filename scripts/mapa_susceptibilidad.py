@@ -14,7 +14,7 @@ def main():
     hu = hu[hu["region"].astype(str).str.contains("Valpara", na=False)].reset_index(drop=True)
     assert len(hu) == len(s)
     hu = hu.to_crs(4326)
-    for c in ["susc_acumulacion", "prioridad_inundacion", "pctl_empirico"]:
+    for c in ["susc_acumulacion", "prioridad_inundacion", "pctl_empirico", "clase_prioridad"]:
         hu[c] = s[c].values
     aoi = gpd.read_file(AOI).to_crs(4326)
     huc = gpd.clip(hu, aoi)
@@ -30,12 +30,16 @@ def main():
 
     aoi.boundary.plot(ax=ax[1], color="#111", linewidth=1.0)
     huc.plot(ax=ax[1], color="#eee", markersize=3)
-    pri = huc[(huc.pctl_empirico >= 90)]
-    pri.plot(ax=ax[1], column="prioridad_inundacion", cmap="OrRd", markersize=9,
-             vmin=float(pri.prioridad_inundacion.quantile(.1)),
-             vmax=float(pri.prioridad_inundacion.quantile(.95)), legend=True,
-             legend_kwds={"label": "Prioridad de inundación/saturación (≥P90)", "shrink": 0.55})
-    ax[1].set_title("Prioridad de inundación/saturación\n(exposición meteorológica × susceptibilidad, humedales ≥P90)", fontsize=10)
+    import matplotlib.patches as mpatches
+    orden=["Muy Baja","Baja","Moderada","Alta","Muy Alta"]
+    cols={"Muy Baja":"#2c7bb6","Baja":"#abd9e9","Moderada":"#ffffbf","Alta":"#fdae61","Muy Alta":"#d7191c"}
+    pri = huc[huc.pctl_empirico >= 90]
+    for k in orden:
+        sub=pri[pri.clase_prioridad==k]
+        if len(sub): sub.plot(ax=ax[1], color=cols[k], markersize=10)
+    ax[1].legend(handles=[mpatches.Patch(color=cols[k], label=k) for k in orden],
+                 title="Prioridad de inundacion", loc="lower left", fontsize=8, title_fontsize=8)
+    ax[1].set_title("Prioridad de inundacion en 5 clases (humedales >=P90)", fontsize=10)
     ax[1].set_xlabel("Longitud"); ax[1].set_ylabel("Latitud"); ax[1].set_aspect(1.18)
 
     fig.suptitle("Río atmosférico jul-2026, Valparaíso — susceptibilidad de acumulación y prioridad de inundación de humedales",

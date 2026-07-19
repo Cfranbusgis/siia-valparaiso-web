@@ -1,17 +1,31 @@
 {
   "cobertura_suelo_pct": 100.0,
-  "susc_media": 0.339,
-  "prioridad_media": 0.211,
+  "susc_media": 0.459,
+  "prioridad_media": 0.285,
   "humedales_ge_P90": 468,
-  "prioridad_alta (>=P90 y susc alta)": 160,
+  "prioridad_alta (>=P90 y susc alta)": 159,
+  "clases_prioridad": {
+    "Moderada": 585,
+    "Muy Alta": 584,
+    "Alta": 583,
+    "Muy Baja": 583,
+    "Baja": 581
+  },
+  "clases_prioridad_ge_P90": {
+    "Muy Alta": 312,
+    "Alta": 105,
+    "Moderada": 34,
+    "Baja": 16,
+    "Muy Baja": 1
+  },
   "top_comunas_prioridad": {
-    "Casablanca": 41,
-    "Limache": 19,
-    "Algarrobo": 16,
-    "Quilpué": 16,
-    "Valparaíso": 12,
-    "Quillota": 9,
-    "Quintero": 8,
-    "Concón": 8
+    "Casablanca": 44,
+    "Quilpué": 17,
+    "Limache": 16,
+    "Valparaíso": 13,
+    "Algarrobo": 11,
+    "Quintero": 10,
+    "Quillota": 8,
+    "Concón": 7
   }
 }

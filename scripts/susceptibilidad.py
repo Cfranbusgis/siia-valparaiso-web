@@ -27,29 +27,39 @@ def main():
     exp = pd.read_csv(HERE / "humedales_exposicion_v2.csv", encoding="utf-8")
     con = pd.read_csv(HERE / "humedales_concavidad.csv", encoding="utf-8")
     sue = pd.read_csv(HERE / "humedales_suelo.csv", encoding="utf-8")
+    ddr = pd.read_csv(HERE / "humedales_distdren.csv", encoding="utf-8")
     ano = pd.read_csv(HERE / "humedales_valpo_anomalia_v2.csv", encoding="utf-8")
-    n = len(exp); assert len(con) == n == len(sue) == len(ano)
+    n = len(exp); assert len(con) == n == len(sue) == len(ano) == len(ddr)
 
     twi = exp["expo_topo"].to_numpy()
     acc = con["acc_topo"].to_numpy()
-    suelo = sue["expo_suelo"].to_numpy()             # puede tener NaN (sin CIREN)
+    suelo = sue["expo_suelo"].to_numpy()             # puede tener NaN
+    prox = ddr["prox_drenaje"].to_numpy()            # cercania a cauce (fsm-pk)
     met = exp["expo_met"].to_numpy()
 
-    # susceptibilidad de acumulación = media de componentes disponibles
-    S = np.vstack([twi, acc, suelo])
+    # susceptibilidad de acumulacion = media de componentes disponibles
+    # (TWI + concavidad/depresiones + retencion de suelo + cercania a drenaje)
+    S = np.vstack([twi, acc, suelo, prox])
     susc = np.nanmean(S, axis=0)
     cobertura_suelo = ~np.isnan(suelo)
 
     # prioridad de inundación/saturación = exposición meteo × susceptibilidad
     prioridad = met * susc
 
+    # 5 clases (Muy Baja->Muy Alta) por quintiles de la prioridad (fsm-pk)
+    qs = np.nanquantile(prioridad, [0.2, 0.4, 0.6, 0.8])
+    clases = np.array(["Muy Baja", "Baja", "Moderada", "Alta", "Muy Alta"])
+    clase = clases[np.digitize(prioridad, qs)]
+
     out = pd.DataFrame({
         "nom_humed": exp["nom_humed"] if "nom_humed" in exp else ano.get("nom_humed"),
         "comuna": sue["comuna"], "pctl_empirico": ano["pctl_empirico"],
         "expo_met": np.round(met, 3), "twi": np.round(twi, 3),
         "acc_topo": np.round(acc, 3), "expo_suelo": np.round(suelo, 3),
+        "prox_drenaje": np.round(prox, 3),
         "susc_acumulacion": np.round(susc, 3),
         "prioridad_inundacion": np.round(prioridad, 3),
+        "clase_prioridad": clase,
         "suelo_fuente": sue["fuente_suelo"],
     })
     out.to_csv(HERE / "humedales_susceptibilidad.csv", index=False, encoding="utf-8")
@@ -64,6 +74,8 @@ def main():
         "prioridad_media": round(float(np.nanmean(prioridad)), 3),
         "humedales_ge_P90": int(p90.sum()),
         "prioridad_alta (>=P90 y susc alta)": int(alta.sum()),
+        "clases_prioridad": {k:int(v) for k,v in pd.Series(clase).value_counts().to_dict().items()},
+        "clases_prioridad_ge_P90": {k:int(v) for k,v in pd.Series(clase[p90.values]).value_counts().to_dict().items()},
         "top_comunas_prioridad": (out[alta].groupby("comuna").size()
                                   .sort_values(ascending=False).head(8).to_dict()),
     }
