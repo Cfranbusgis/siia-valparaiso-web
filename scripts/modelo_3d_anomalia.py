@@ -171,7 +171,7 @@ def build_png(dem, anom, x_km, y_km):
     face = cm.YlGnBu(norm(np.nan_to_num(anom, nan=0.0)))
     face[..., -1] = np.where(np.isnan(dem), 0.0, 1.0)
 
-    fig = plt.figure(figsize=(13, 8), dpi=200)
+    fig = plt.figure(figsize=(11, 6.6), dpi=115)
     ax = fig.add_axes([0.03, 0.06, 0.70, 0.86], projection="3d")
     ax.set_proj_type("ortho")
     ax.plot_surface(x_km, y_km, np.ma.masked_invalid(z_plot), facecolors=face,
@@ -191,7 +191,8 @@ def build_png(dem, anom, x_km, y_km):
     cb = fig.colorbar(cm.ScalarMappable(norm=norm, cmap="YlGnBu"), cax=cax)
     cb.set_label("Anomalía de precipitación corregida (%)", rotation=90, labelpad=12)
     fig.text(0.76, 0.14, f"Exageración vertical: ×{VE:g}", fontsize=9)
-    fig.savefig(HERE / "modelo_3d_anomalia_valpo.png", bbox_inches="tight", pad_inches=0.15)
+    fig.savefig(HERE / "modelo_3d_anomalia_valpo.png", bbox_inches="tight",
+                pad_inches=0.1, dpi=115)
     plt.close(fig)
     print("PNG 3D -> modelo_3d_anomalia_valpo.png")
 

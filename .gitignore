@@ -9,3 +9,5 @@ Thumbs.db
 # gran binario externo (descargable): base de atributos HWSD2
 HWSD2.sqlite
 *.gpkg
+CR2MET_pr_v2.0_day_1979_2020_005deg.nc
+*.nc

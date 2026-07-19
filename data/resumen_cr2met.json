@@ -1,0 +1,9 @@
+{
+  "cr2met_media_1979_2020_mm": 56.4,
+  "cr2met_media_1991_2020_mm": 38.8,
+  "era5_media_1995_2025_mm": 43.0,
+  "corr_por_celda_cr2met_vs_era5": 0.194,
+  "evento_pctl_mediano_vs_cr2met_9120": 90.3,
+  "evento_anom_pct_vs_cr2met_9120": 171.5,
+  "reciente_v2_media_mm": 102.0
+}
