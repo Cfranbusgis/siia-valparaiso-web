@@ -99,7 +99,7 @@ def build_html(dem, anom, x_km, y_km, transform, crs):
     surf = go.Surface(
         z=z_plot, x=xline, y=yline, surfacecolor=anom,
         colorscale="YlGnBu", cmin=-50, cmax=250,
-        colorbar=dict(title="Anomalía corregida (%)", len=0.7, x=1.02, y=0.5),
+        colorbar=dict(title="Anomalía (%)", len=0.7, x=1.02, y=0.5),
         lighting=dict(ambient=0.5, diffuse=0.7, specular=0.1, roughness=0.9),
         lightposition=dict(x=100000, y=100000, z=80000),
         hovertemplate="E-O %{x:.0f} km<br>S-N %{y:.0f} km<br>Anomalía %{surfacecolor:.0f} %<extra></extra>",
@@ -125,7 +125,7 @@ def build_html(dem, anom, x_km, y_km, transform, crs):
     fig = go.Figure([surf, scat])
     fig.update_layout(
         title="Relieve de la Región de Valparaíso con la anomalía de precipitación "
-              "corregida de julio de 2026<br><sup>Color de la superficie: anomalía corregida "
+              "de julio de 2026<br><sup>Color de la superficie: anomalía corregida "
               "(%) · puntos: humedales ≥ P90 por exposición compuesta "
               "(exageración vertical ×8)</sup>",
         scene=dict(
@@ -176,8 +176,7 @@ def build_png(dem, anom, x_km, y_km):
     ax.set_proj_type("ortho")
     ax.plot_surface(x_km, y_km, np.ma.masked_invalid(z_plot), facecolors=face,
                     linewidth=0, antialiased=True, shade=False, rstride=1, cstride=1)
-    fig.suptitle("Relieve de Valparaíso con la anomalía de precipitación corregida "
-                 "· julio 2026", fontsize=13, fontweight="bold", y=0.97)
+    fig.suptitle("Relieve de Valparaíso con la anomalía de precipitación · julio 2026", fontsize=13, fontweight="bold", y=0.97)
     ax.set_xlabel("Este-Oeste (km)", labelpad=12)
     ax.set_ylabel("Sur-Norte (km)", labelpad=12)
     ax.zaxis.set_rotate_label(False)
@@ -189,7 +188,7 @@ def build_png(dem, anom, x_km, y_km):
 
     cax = fig.add_axes([0.80, 0.22, 0.018, 0.5])
     cb = fig.colorbar(cm.ScalarMappable(norm=norm, cmap="YlGnBu"), cax=cax)
-    cb.set_label("Anomalía de precipitación corregida (%)", rotation=90, labelpad=12)
+    cb.set_label("Anomalía de precipitación (%)", rotation=90, labelpad=12)
     fig.text(0.76, 0.14, f"Exageración vertical: ×{VE:g}", fontsize=9)
     fig.savefig(HERE / "modelo_3d_anomalia_valpo.png", bbox_inches="tight",
                 pad_inches=0.1, dpi=115)

@@ -17,7 +17,9 @@ import matplotlib.pyplot as plt
 from affine import Affine
 from shapely.geometry import box
 
-from config import WORK_DIR as HERE, AOI_SHP as AOI, HUMEDALES_SHP as HU
+HERE = Path(__file__).resolve().parent
+AOI = Path(r"C:\Users\cfran\Desktop\MOD_EToPM-HS\03_inputs\AOI\RV.shp")
+HU = HERE.parent / "humedales_inventario_rm_rv_cont.shp"
 UTM = 32719
 
 
@@ -43,14 +45,19 @@ def main():
     grid_clip = gpd.clip(grid, aoi)
     hu_clip = gpd.clip(hu.to_crs(4326), aoi)
 
+    from map_deco import decorate
     fig, ax = plt.subplots(figsize=(8.5, 9.5))
     grid_clip.plot(ax=ax, color="#f4f4f4", edgecolor="#e2e2e2", linewidth=0.2)
     hu_clip.plot(ax=ax, column="pctl_empirico", cmap="viridis", vmin=50, vmax=100,
                  edgecolor="black", linewidth=0.12, alpha=0.9, legend=True,
                  legend_kwds={"label": "Percentil empírico del acumulado corregido "
-                                       "(registro 2003–2023)", "shrink": 0.62})
+                                       "(registro 1995–2025)", "shrink": 0.62})
     aoi.boundary.plot(ax=ax, color="#111", linewidth=1.1)
+    ax.set_title("Exposición meteorológica de los humedales\n"
+                 "Percentil empírico del acumulado (registro 1995–2025)",
+                 fontsize=11, fontweight="bold")
     ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud"); ax.set_aspect(1.18)
+    decorate(ax, km=50)
     fig.tight_layout()
     fig.savefig(HERE / "mapa_humedales_valpo_v2.png", dpi=170)
     plt.close(fig)

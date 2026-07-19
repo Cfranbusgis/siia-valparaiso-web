@@ -20,7 +20,8 @@ from matplotlib.colors import TwoSlopeNorm
 from affine import Affine
 from shapely.geometry import box
 
-from config import WORK_DIR as HERE, AOI_SHP as AOI
+HERE = Path(__file__).resolve().parent
+AOI = Path(r"C:\Users\cfran\Desktop\MOD_EToPM-HS\03_inputs\AOI\RV.shp")
 UTM = 32719
 
 
@@ -38,6 +39,7 @@ def main():
     aoi = gpd.read_file(AOI).to_crs(4326)
     grid_clip = gpd.clip(grid, aoi)
 
+    from map_deco import decorate
     fig, axes = plt.subplots(1, 2, figsize=(15, 9))
 
     ax = axes[0]
@@ -46,16 +48,17 @@ def main():
                    edgecolor="white", linewidth=0.15, legend=True,
                    legend_kwds={"label": "Anomalía corregida (%)", "shrink": 0.62})
     aoi.boundary.plot(ax=ax, color="#111", linewidth=1.1)
-    ax.set_title("Anomalía v2 (reciente corregido por obs. DMC)\n"
-                 "1–18 jul 2026 vs climatología homogénea 2003–2023",
-                 fontsize=11)
+    ax.set_title("Anomalía corregida (reciente corregido por obs. DMC)\n"
+                 "1–19 jul 2026 vs climatología homogénea 1995–2025",
+                 fontsize=11, fontweight="bold")
     ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud"); ax.set_aspect(1.18)
+    decorate(ax, km=50)
 
     ax = axes[1]
     grid_clip.plot(ax=ax, column="pctl_empirico", cmap="YlGnBu",
                    vmin=50, vmax=100, edgecolor="white", linewidth=0.15,
                    legend=True,
-                   legend_kwds={"label": "Percentil empírico (21 años)",
+                   legend_kwds={"label": "Percentil empírico (registro 30 años)",
                                 "shrink": 0.62})
     sup = grid_clip[grid_clip.supera_max_21a]
     if len(sup):
@@ -63,13 +66,14 @@ def main():
                  hatch="///", linewidth=0.6)
     aoi.boundary.plot(ax=ax, color="#111", linewidth=1.1)
     ax.set_title("Rareza empírica del acumulado corregido\n"
-                 "(achurado rojo: supera el máximo del registro 2003–2023)",
-                 fontsize=11)
+                 "(percentil dentro del registro 1995–2025)",
+                 fontsize=11, fontweight="bold")
     ax.set_xlabel("Longitud"); ax.set_ylabel("Latitud"); ax.set_aspect(1.18)
+    decorate(ax, km=50)
 
-    fig.suptitle("Río atmosférico jul-2026, Región de Valparaíso — anomalía v2 "
+    fig.suptitle("Río atmosférico jul-2026, Región de Valparaíso — anomalía corregida "
                  "(corrección espacial de residuos validada por LOO)",
-                 fontsize=12.5, y=0.98)
+                 fontsize=12.5, fontweight="bold", y=0.98)
     fig.tight_layout()
     fig.savefig(HERE / "mapa_anomalia_valpo_v2.png", dpi=170)
     plt.close(fig)
