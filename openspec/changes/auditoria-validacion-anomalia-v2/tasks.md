@@ -45,6 +45,13 @@
       empírico en lugar de z) y tabla comunal reordenada por percentil
       (corrige el artefacto de base seca: Papudo/La Ligua/Petorca →
       Limache/Villa Alemana/Concón/Valparaíso/Quillota).
+- [x] 4.5 Figura 5 / modelo 3D regenerados con la anomalía corregida (drape
+      v2, escala de la Figura 3; puntos = humedales ≥ P90 por exposición
+      compuesta) — cerrado el último producto anclado a v1.
+- [x] 4.6 Sección «Auditoría del análisis y trazabilidad de versiones»
+      incorporada al informe: panel de cuatro especialidades, contrauditoría
+      empírica (1 hallazgo refutado, 2 confirmados y corregidos), auditoría
+      externa → topografía 30 m.
 - [x] 4.4 Reescritura de las secciones profundas del informe en tono técnico:
       validación observacional y corrección de sesgo (con tabla LOO),
       distribución espacial, exposición de humedales por percentil,
