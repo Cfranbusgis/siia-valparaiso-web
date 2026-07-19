@@ -1,0 +1,34 @@
+{
+  "definicion": "expo_met=(pctl-50)/50 en [0,1]; expo_topo=TWI norm 2-98; compuesto w*met+(1-w)*topo; alta >= 0.6; conjunto >= P90",
+  "n_conjunto_p90": 379,
+  "expo_met_media_p90": 0.87,
+  "expo_topo_media_p90": 0.55,
+  "alta_por_peso": {
+    "w30": 202,
+    "w50": 308,
+    "w70": 377
+  },
+  "sensibilidad_spearman": {
+    "spearman_w30_w50": 0.993,
+    "spearman_w50_w70": 0.972,
+    "spearman_w30_w70": 0.942
+  },
+  "sensibilidad_jaccard_alta": {
+    "jaccard_alta_w30_w50": 0.656,
+    "jaccard_alta_w50_w70": 0.817,
+    "jaccard_alta_w30_w70": 0.536
+  },
+  "nucleo_robusto_alta": 202,
+  "union_alta": 377,
+  "pct_nucleo_de_union": 53.6,
+  "top_comunas_nucleo": {
+    "Casablanca": 61,
+    "Quillota": 25,
+    "Quilpué": 22,
+    "Limache": 19,
+    "Valparaíso": 17,
+    "Algarrobo": 16,
+    "Concón": 9,
+    "La Ligua": 9
+  }
+}

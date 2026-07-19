@@ -29,7 +29,7 @@ precipitación concentrado en 48–60 horas.
 | Anomalía regional media | +313 % | **+111 %** |
 | Rareza (mediana regional) | z = 3,74 | **percentil empírico 86 del registro de 21 años** |
 | Humedales en condición inusual | 1.364 con z > 3 (47 %) | **379 ≥ P90 (13 %); 214 sobre el máximo del registro** |
-| Prioridad territorial (exposición compuesta) | 671 de los z > 3, índice sin calibrar | **núcleo robusto de 202 humedales, invariante a la ponderación** |
+| Prioridad territorial (exposición compuesta) | 671 de los z > 3, índice sin calibrar | **núcleo robusto de 172 humedales, invariante a la ponderación (topografía a 30 m)** |
 | Máximo observado en 24 h | 120,1 mm (La Dormida, red DMC/DGAC) | ídem (dato observacional) |
 
 Lectura: un evento **notable, pero no excepcional a escala regional** —más del
@@ -84,12 +84,15 @@ superaba z > 3, proporción imposible bajo el supuesto de normalidad.
    en la escala de Ralph et al. (2019), coherente con la clasificación
    operacional.
 7. **Exposición compuesta (recalibrada):** componente meteorológica desde el
-   percentil empírico corregido, componente topográfica desde el TWI (DEM
-   250 m), evaluadas sobre el conjunto ≥ P90. Sin registros de anegamiento que
-   permitan calibrar la ponderación, esta se somete a análisis de sensibilidad
-   (30/70–70/30): el ordenamiento es invariante (Spearman ≥ 0,94) y 202
-   humedales mantienen la categoría alta bajo cualquier ponderación (núcleo
-   robusto; encabezan Casablanca, Quillota, Quilpué y Limache).
+   percentil empírico corregido, componente topográfica desde el TWI derivado
+   del modelo de superficie ALOS AW3D30 a 30 m — resolución acorde al tamaño
+   de los humedales; carácter DSM (dosel/edificaciones) declarado. Sin
+   registros de anegamiento que permitan calibrar la ponderación, esta se
+   somete a análisis de sensibilidad (30/70–70/30): el ordenamiento es
+   invariante (Spearman ≥ 0,94) y 172 humedales mantienen la categoría alta
+   bajo cualquier ponderación (núcleo robusto; encabezan Casablanca, Limache,
+   Algarrobo y Quilpué). Frente a la topografía de 250 m, el 30 m depura el
+   núcleo (202 → 172): elimina falsas zonas de convergencia del píxel grueso.
 
 ## 5. Decisiones metodológicas
 
@@ -129,7 +132,8 @@ superaba z > 3, proporción imposible bajo el supuesto de normalidad.
    recuentos describen superficie expuesta, no unidades independientes.
 5. La ponderación del índice de exposición compuesta no está calibrada contra
    registros de anegamiento; en su lugar se reporta su sensibilidad
-   (30/70–70/30) y un núcleo robusto de 202 humedales invariante a ella.
+   (30/70–70/30) y un núcleo robusto de 172 humedales invariante a ella. La
+   topografía proviene de un DSM (AW3D30), que incluye dosel y edificaciones.
 
 ## 8. Líneas de trabajo
 

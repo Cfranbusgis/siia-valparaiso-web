@@ -42,6 +42,8 @@ STEPS = [
     ("anomalia_v2.py", "Anomalía v2: clima homogéneo + percentiles empíricos", False),
     ("mapa_v2.py", "Mapa v2 (anomalía corregida + percentil empírico)", False),
     ("mapa_humedales_v2.py", "Figura humedales v2 (percentil empírico)", False),
+    ("prep_dem30.py", "DEM 30 m AW3D30 (se omite si falta el export GEE)", False),
+    ("topo_30m.py", "TWI 30 m (se omite si falta el DEM 30 m)", False),
     ("exposicion_v2.py", "Exposición compuesta v2 (sensibilidad + núcleo robusto)", False),
     ("build_report.py", "Ensambla el informe HTML", False),
     ("assemble_web.py", "Construye el sitio (public/)", False),

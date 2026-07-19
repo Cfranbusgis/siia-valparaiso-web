@@ -34,7 +34,10 @@ import rasterio
 from scipy.stats import spearmanr
 
 from config import WORK_DIR as HERE, HUMEDALES_SHP as HU
-TWI_TIF = HERE / "twi_valpo.tif"
+# TWI a 30 m (ALOS AW3D30, topo_30m.py) si existe; si no, el de 250 m.
+# AW3D30 es DSM (incluye dosel/edificaciones); caveat declarado en el informe.
+TWI_TIF = (HERE / "twi_valpo_30m.tif" if (HERE / "twi_valpo_30m.tif").exists()
+           else HERE / "twi_valpo.tif")
 PESOS = [0.3, 0.5, 0.7]          # peso de la componente meteorologica
 UMBRAL_ALTA = 0.6                # igual que v1, por comparabilidad
 
@@ -60,9 +63,29 @@ def main():
     rows = np.clip(np.asarray(rows, dtype=int), 0, twi.shape[0] - 1)
     cols = np.clip(np.asarray(cols, dtype=int), 0, twi.shape[1] - 1)
 
+    # muestreo con respaldo: si el punto cae en nodata (borde costero del DEM
+    # 30 m), toma el vecino valido mas cercano (anillos hasta 8 px = 240 m)
+    def sample(arr, r, c):
+        v = arr[r, c]
+        if np.isfinite(v):
+            return v
+        for rad in range(1, 9):
+            r0, r1 = max(r - rad, 0), min(r + rad + 1, arr.shape[0])
+            c0, c1 = max(c - rad, 0), min(c + rad + 1, arr.shape[1])
+            win = arr[r0:r1, c0:c1]
+            fin = win[np.isfinite(win)]
+            if fin.size:
+                return float(fin.mean())
+        return np.nan
+
+    twi_s = np.array([sample(twi, r, c) for r, c in zip(rows, cols)])
+    twin_s = np.array([sample(twi_n, r, c) for r, c in zip(rows, cols)])
+    n_fb = int(np.sum(~np.isfinite(twi[rows, cols])))
+    print(f"puntos con respaldo de vecindad (nodata en el punto): {n_fb}")
+
     df = hv.copy()
-    df["twi"] = np.round(twi[rows, cols], 2)
-    df["expo_topo"] = np.round(twi_n[rows, cols], 3)
+    df["twi"] = np.round(twi_s, 2)
+    df["expo_topo"] = np.round(twin_s, 3)
     df["expo_met"] = np.round(np.clip((df.pctl_empirico - 50.0) / 50.0, 0, 1), 3)
 
     for w in PESOS:
@@ -98,6 +121,7 @@ def main():
     resumen = {
         "definicion": ("expo_met=(pctl-50)/50 en [0,1]; expo_topo=TWI norm 2-98; "
                        "compuesto w*met+(1-w)*topo; alta >= 0.6; conjunto >= P90"),
+        "twi_fuente": TWI_TIF.name,
         "n_conjunto_p90": n,
         "expo_met_media_p90": round(float(sub.expo_met.mean()), 3),
         "expo_topo_media_p90": round(float(sub.expo_topo.mean()), 3),

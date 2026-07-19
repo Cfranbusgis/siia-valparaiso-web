@@ -1,0 +1,14 @@
+{
+  "dem": "DEM_AW3D30_30m_UTM19S_RV.tif",
+  "px_m": 30.0,
+  "celdas_validas": 17785849,
+  "slope_media_deg": 18.58,
+  "twi_min_p2_p50_p98_max": [
+    -0.85,
+    4.46,
+    6.21,
+    13.04,
+    25.56
+  ],
+  "segundos": 73.1
+}

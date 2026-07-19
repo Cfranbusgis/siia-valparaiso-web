@@ -296,12 +296,15 @@ y no porque allí hubiese llovido más.</p>
 
 <h2>Exposición topográfica combinada</h2>
 <p>La exposición meteorológica describe cuánto se apartó la precipitación de su
-climatología, pero no dónde tiende a acumularse el agua sobre el terreno. Para
-avanzar en esa dirección se procesó el modelo digital de elevación regional (250 m):
-se derivaron la pendiente y la acumulación de flujo (algoritmo D8, previo relleno de
-depresiones) y, a partir de ambas, el índice topográfico de humedad
-(<em>TWI</em>), que identifica las posiciones de convergencia hídrica &mdash; fondos
-de valle y vegas &mdash; con mayor propensión a la saturación.</p>
+climatología, pero no dónde tiende a acumularse el agua sobre el terreno. Para avanzar
+en esa dirección se procesó el modelo de elevación de la región a 30 m (ALOS AW3D30),
+resolución acorde al tamaño de los humedales del inventario: se derivaron la pendiente
+y la acumulación de flujo (algoritmo D8, previo relleno de depresiones) y, a partir de
+ambas, el índice topográfico de humedad (<em>TWI</em>), que identifica las posiciones
+de convergencia hídrica &mdash; fondos de valle y vegas &mdash; con mayor propensión a
+la saturación. AW3D30 es un modelo de superficie (DSM), que incluye dosel y
+edificaciones; su efecto sobre el TWI en fondos de valle es menor y se declara como
+fuente de incertidumbre.</p>
 <p>Combinando la exposición meteorológica y la topográfica (TWI normalizado) se
 obtiene un <strong>índice de exposición compuesta</strong>. En su versión recalibrada
 (v2), la componente meteorológica se define desde el percentil empírico corregido
@@ -310,7 +313,7 @@ obtiene un <strong>índice de exposición compuesta</strong>. En su versión rec
 existir registros sistemáticos de anegamiento que permitan calibrar contra terreno la
 ponderación meteorológica/topográfica, esta se somete a un análisis de sensibilidad
 (30/70, 50/50 y 70/30): el ordenamiento del índice resulta prácticamente invariante
-(correlación de rangos &ge; 0,94) y <strong>202 humedales</strong> &mdash; el 54 % de los
+(correlación de rangos &ge; 0,94) y <strong>172 humedales</strong> &mdash; el 46 % de los
 que alcanzan la categoría alta bajo alguna ponderación &mdash; la mantienen bajo
 <em>cualquiera</em> de las tres. Ese <strong>núcleo robusto</strong> constituye el
 conjunto de prioridad territorial: humedales cuyo acumulado fue inusual (&ge; P90) y que
@@ -329,13 +332,13 @@ discrimina es el topográfico: el núcleo corresponde, en la práctica, a los hu
 <h4 style="font-size:1rem;margin:1.2em 0 .3em">Comunas por exposición compuesta media (conjunto &ge; P90, ponderación 50/50)</h4>
 <div class="tablewrap"><table>
   <thead><tr><th>Comuna</th><th class="num">Exposición compuesta media (0&ndash;1)</th><th class="num">Humedales &ge; P90</th><th>Intensidad relativa</th></tr></thead>
-  <tbody><tr><td>La Cruz</td><td class="num">0.91</td><td class="num">1</td><td class="bar"><span style="width:100%"></span></td></tr><tr><td>La Ligua</td><td class="num">0.81</td><td class="num">11</td><td class="bar"><span style="width:89%"></span></td></tr><tr><td>Viña del Mar</td><td class="num">0.75</td><td class="num">7</td><td class="bar"><span style="width:83%"></span></td></tr><tr><td>Valparaíso</td><td class="num">0.72</td><td class="num">28</td><td class="bar"><span style="width:79%"></span></td></tr><tr><td>Quilpué</td><td class="num">0.72</td><td class="num">40</td><td class="bar"><span style="width:79%"></span></td></tr><tr><td>Quintero</td><td class="num">0.72</td><td class="num">11</td><td class="bar"><span style="width:79%"></span></td></tr><tr><td>Casablanca</td><td class="num">0.71</td><td class="num">101</td><td class="bar"><span style="width:79%"></span></td></tr><tr><td>Concón</td><td class="num">0.71</td><td class="num">16</td><td class="bar"><span style="width:78%"></span></td></tr></tbody>
+  <tbody><tr><td>Viña del Mar</td><td class="num">0.85</td><td class="num">7</td><td class="bar"><span style="width:100%"></span></td></tr><tr><td>La Ligua</td><td class="num">0.75</td><td class="num">11</td><td class="bar"><span style="width:88%"></span></td></tr><tr><td>Casablanca</td><td class="num">0.72</td><td class="num">101</td><td class="bar"><span style="width:85%"></span></td></tr><tr><td>Valparaíso</td><td class="num">0.72</td><td class="num">28</td><td class="bar"><span style="width:84%"></span></td></tr><tr><td>Limache</td><td class="num">0.72</td><td class="num">53</td><td class="bar"><span style="width:84%"></span></td></tr><tr><td>Algarrobo</td><td class="num">0.72</td><td class="num">40</td><td class="bar"><span style="width:84%"></span></td></tr><tr><td>Villa Alemana</td><td class="num">0.70</td><td class="num">15</td><td class="bar"><span style="width:82%"></span></td></tr><tr><td>Concón</td><td class="num">0.70</td><td class="num">16</td><td class="bar"><span style="width:82%"></span></td></tr></tbody>
 </table></div>
 <p class="muted">El índice no constituye una estimación de inundación, sino un
 indicador de prioridad que integra dos dimensiones de la exposición. El recuento de
-humedales del núcleo robusto por comuna encabeza en Casablanca (61), Quillota (25),
-Quilpué (22), Limache (19) y Valparaíso (17). Valores derivados del modelo digital de
-elevación ASTER GDEM (250 m) y del análisis de precipitación corregido (v2).</p>
+humedales del núcleo robusto por comuna encabeza en Casablanca (50), Limache (24),
+Algarrobo (22), Quilpué (15) y Valparaíso (15). Valores derivados del modelo digital de
+superficie ALOS AW3D30 (30 m) y del análisis de precipitación corregido (v2).</p>
 
 <h2>Validación observacional y corrección de sesgo</h2>
 <p>La ventana reciente proviene de un producto de modelo casi en tiempo real, de modo que
@@ -512,13 +515,14 @@ que el área de estudio:</p>
 <div class="panel">
   <ul class="tight">
     <li><strong>Susceptibilidad topográfica (modelo digital de elevación) &mdash;
-      incorporada y recalibrada.</strong> A partir del DEM regional (ASTER GDEM, 250 m) se
-      derivaron la pendiente, la acumulación de flujo y el índice topográfico de humedad,
-      integrados con el percentil empírico corregido en el índice de exposición compuesta
-      v2 (análisis de sensibilidad de la ponderación y núcleo robusto de 202 humedales).
-      La extensión pendiente es validar las zonas de convergencia contra registros de
-      anegamiento observados, lo que permitiría calibrar la ponderación contra
-      terreno.</li>
+      incorporada, recalibrada y refinada a 30 m.</strong> La cadena topográfica
+      (pendiente, acumulación de flujo D8, TWI) se recalculó sobre el modelo de
+      superficie ALOS AW3D30 (30 m), resolución acorde al tamaño de los humedales del
+      inventario, e integrada con el percentil empírico corregido en el índice de
+      exposición compuesta v2 (análisis de sensibilidad de la ponderación y núcleo
+      robusto de 172 humedales). La extensión pendiente es validar las zonas de
+      convergencia contra registros de anegamiento observados, lo que permitiría
+      calibrar la ponderación contra terreno.</li>
     <li><strong>Condición de la vegetación (NDVI).</strong> La serie MODIS de NDVI
       (250 m, 2003&ndash;2023) permite caracterizar el estado y la estacionalidad de la
       cobertura vegetal de los humedales, y contrastar la respuesta posterior al evento.</li>
