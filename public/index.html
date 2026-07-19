@@ -297,10 +297,11 @@ y no porque allí hubiese llovido más.</p>
 <h2>Exposición topográfica combinada</h2>
 <p>La exposición meteorológica describe cuánto se apartó la precipitación de su
 climatología, pero no dónde tiende a acumularse el agua sobre el terreno. Para avanzar
-en esa dirección se procesó el modelo de elevación de la región a 30 m (ALOS AW3D30),
-resolución acorde al tamaño de los humedales del inventario: se derivaron la pendiente
-y la acumulación de flujo (algoritmo D8, previo relleno de depresiones) y, a partir de
-ambas, el índice topográfico de humedad (<em>TWI</em>), que identifica las posiciones
+en esa dirección se procesó el modelo de elevación de la región a 30 m (ALOS AW3D30;
+Tadono et al., 2014), resolución acorde al tamaño de los humedales del inventario: se
+derivaron la pendiente y la acumulación de flujo (algoritmo D8, previo relleno de
+depresiones; O'Callaghan y Mark, 1984) y, a partir de ambas, el índice topográfico de
+humedad (<em>TWI</em>; Beven y Kirkby, 1979), que identifica las posiciones
 de convergencia hídrica &mdash; fondos de valle y vegas &mdash; con mayor propensión a
 la saturación. AW3D30 es un modelo de superficie (DSM), que incluye dosel y
 edificaciones; su efecto sobre el TWI en fondos de valle es menor y se declara como
@@ -343,7 +344,9 @@ superficie ALOS AW3D30 (30 m) y del análisis de precipitación corregido (v2).<
 <h2>Validación observacional y corrección de sesgo</h2>
 <p>La ventana reciente proviene de un producto de modelo casi en tiempo real, de modo que
 su contraste con observaciones independientes no es un complemento, sino un paso obligado
-del método. Se emplearon tres fuentes: la red de estaciones DMC/DGAC, cinco modelos
+del método: la evaluación de productos grillados de precipitación sobre los complejos
+gradientes topográficos y climáticos de Chile ha mostrado sesgos sistemáticos que solo el
+contraste con estaciones permite cuantificar (Zambrano-Bigiarini et al., 2017). Se emplearon tres fuentes: la red de estaciones DMC/DGAC, cinco modelos
 operacionales y reportes aeronáuticos METAR. La convergencia cualitativa de las tres
 respalda la ocurrencia de un evento intenso; la comparación cuantitativa estación por
 estación permitió, además, medir y corregir el sesgo del modelo, como se describe a
@@ -566,11 +569,12 @@ que el área de estudio:</p>
   <ul class="tight">
     <li><strong>Climatología de referencia (homogénea):</strong> acumulados del 1 al 18
       de julio de cada año del periodo 2003&ndash;2023, obtenidos por celda desde el
-      archivo ERA5 (era5_seamless), la misma familia de reanálisis que alimenta la ventana
-      reciente; media regional de 47,0 mm. Se conserva el registro año a año completo, lo
+      archivo ERA5 (era5_seamless; Hersbach et al., 2020), la misma familia de reanálisis
+      que alimenta la ventana reciente; media regional de 47,0 mm. Se conserva el registro año a año completo, lo
       que habilita los percentiles empíricos. La climatología del modelo propio
-      MOD_EToPM-HS (ERA5-Land, 10 km) coincide con esta referencia (correlación por celda
-      de 0,93) y se mantiene como verificación cruzada. Dado que la ventana reciente corta
+      MOD_EToPM-HS (ERA5-Land, 10 km; Muñoz-Sabater et al., 2021) coincide con esta
+      referencia (correlación por celda de 0,93) y se mantiene como verificación
+      cruzada. Dado que la ventana reciente corta
       a las 09:00 del 18, la comparación con el día 18 completo hace la anomalía levemente
       conservadora.</li>
     <li><strong>Ventana reciente:</strong> datos operacionales de Open-Meteo (totales
@@ -592,6 +596,35 @@ que el área de estudio:</p>
       los productos v2 (grilla, humedales y mapas).</li>
   </ul>
 </div>
+
+<h2>Referencias</h2>
+<ul class="tight" style="font-size:.92rem">
+  <li>Beven, K. J. y Kirkby, M. J. (1979). A physically based, variable contributing area
+    model of basin hydrology. <em>Hydrological Sciences Bulletin</em>, 24(1), 43&ndash;69.
+    DOI: 10.1080/02626667909491834</li>
+  <li>Hersbach, H., Bell, B., Berrisford, P. et al. (2020). The ERA5 global reanalysis.
+    <em>Quarterly Journal of the Royal Meteorological Society</em>, 146(730),
+    1999&ndash;2049. DOI: 10.1002/qj.3803</li>
+  <li>Mu&ntilde;oz-Sabater, J., Dutra, E., Agust&iacute;-Panareda, A. et al. (2021).
+    ERA5-Land: a state-of-the-art global reanalysis dataset for land applications.
+    <em>Earth System Science Data</em>, 13, 4349&ndash;4383.
+    DOI: 10.5194/essd-13-4349-2021</li>
+  <li>O'Callaghan, J. F. y Mark, D. M. (1984). The extraction of drainage networks from
+    digital elevation data. <em>Computer Vision, Graphics, and Image Processing</em>,
+    28(3), 323&ndash;344. DOI: 10.1016/S0734-189X(84)80011-0</li>
+  <li>Ralph, F. M., Rutz, J. J., Cordeira, J. M., Dettinger, M., Anderson, M., Reynolds,
+    D., Schick, L. J. y Smallcomb, C. (2019). A scale to characterize the strength and
+    impacts of atmospheric rivers. <em>Bulletin of the American Meteorological
+    Society</em>, 100(2), 269&ndash;289. DOI: 10.1175/BAMS-D-18-0023.1</li>
+  <li>Tadono, T., Ishida, H., Oda, F., Naito, S., Minakawa, K. e Iwamoto, H. (2014).
+    Precise global DEM generation by ALOS PRISM. <em>ISPRS Annals of the Photogrammetry,
+    Remote Sensing and Spatial Information Sciences</em>, II-4, 71&ndash;76.
+    DOI: 10.5194/isprsannals-II-4-71-2014</li>
+  <li>Zambrano-Bigiarini, M., Nauditt, A., Birkel, C., Verbist, K. y Ribbe, L. (2017).
+    Temporal and spatial evaluation of satellite-based rainfall estimates across the
+    complex topographical and climatic gradients of Chile. <em>Hydrology and Earth System
+    Sciences</em>, 21, 1295&ndash;1318. DOI: 10.5194/hess-21-1295-2017</li>
+</ul>
 
 <div class="sourcebar">
   <div class="lbl">Fuentes</div>
