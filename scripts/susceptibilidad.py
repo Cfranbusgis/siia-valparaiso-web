@@ -1,4 +1,4 @@
-"""Índice de susceptibilidad de acumulación y prioridad de inundación/saturación.
+"""Índice de susceptibilidad de inundación y prioridad de inundación/saturación.
 
 Marco:
   Exposición meteorológica (percentil del acumulado corregido)
@@ -57,9 +57,9 @@ def main():
         "expo_met": np.round(met, 3), "twi": np.round(twi, 3),
         "acc_topo": np.round(acc, 3), "expo_suelo": np.round(suelo, 3),
         "prox_drenaje": np.round(prox, 3),
-        "susc_acumulacion": np.round(susc, 3),
-        "prioridad_inundacion": np.round(prioridad, 3),
-        "clase_prioridad": clase,
+        "susc_inundacion": np.round(susc, 3),
+        "amenaza_inundacion": np.round(prioridad, 3),
+        "clase_amenaza": clase,
         "suelo_fuente": sue["fuente_suelo"],
         "cuenca": pd.read_csv(HERE / "humedales_hidro.csv", encoding="utf-8")["cuenca"],
     })
@@ -74,10 +74,10 @@ def main():
         "susc_media": round(float(np.nanmean(susc)), 3),
         "prioridad_media": round(float(np.nanmean(prioridad)), 3),
         "humedales_ge_P90": int(p90.sum()),
-        "prioridad_alta (>=P90 y susc alta)": int(alta.sum()),
-        "clases_prioridad": {k:int(v) for k,v in pd.Series(clase).value_counts().to_dict().items()},
-        "clases_prioridad_ge_P90": {k:int(v) for k,v in pd.Series(clase[p90.values]).value_counts().to_dict().items()},
-        "top_comunas_prioridad": (out[alta].groupby("comuna").size()
+        "amenaza_alta (>=P90 y susc alta)": int(alta.sum()),
+        "clases_amenaza": {k:int(v) for k,v in pd.Series(clase).value_counts().to_dict().items()},
+        "clases_amenaza_ge_P90": {k:int(v) for k,v in pd.Series(clase[p90.values]).value_counts().to_dict().items()},
+        "top_comunas_amenaza": (out[alta].groupby("comuna").size()
                                   .sort_values(ascending=False).head(8).to_dict()),
     }
     (HERE / "resumen_susceptibilidad.json").write_text(

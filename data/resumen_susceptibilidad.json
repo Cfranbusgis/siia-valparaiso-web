@@ -3,22 +3,22 @@
   "susc_media": 0.474,
   "prioridad_media": 0.318,
   "humedales_ge_P90": 468,
-  "prioridad_alta (>=P90 y susc alta)": 159,
-  "clases_prioridad": {
+  "amenaza_alta (>=P90 y susc alta)": 159,
+  "clases_amenaza": {
     "Moderada": 584,
     "Muy Alta": 584,
     "Alta": 583,
     "Muy Baja": 583,
     "Baja": 582
   },
-  "clases_prioridad_ge_P90": {
+  "clases_amenaza_ge_P90": {
     "Muy Alta": 268,
     "Alta": 127,
     "Moderada": 40,
     "Baja": 22,
     "Muy Baja": 11
   },
-  "top_comunas_prioridad": {
+  "top_comunas_amenaza": {
     "Casablanca": 43,
     "Quilpué": 18,
     "Limache": 18,
