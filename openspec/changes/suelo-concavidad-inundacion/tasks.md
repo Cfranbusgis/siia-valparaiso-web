@@ -16,6 +16,10 @@
 - [x] 3.2 Sección nueva + Figura 7 en el informe; refs CIREN (2016) y HWSD2.
 - [x] 3.3 Datos y scripts al repo; commit + push + deploy.
 
-## Pendiente (alcance de mejora)
-- [ ] Complemento edáfico global HWSD2 (decodificar SMU→WRB) para el ~30 % de
-      ≥ P90 altoandino sin CIREN.
+## 4. Complemento edáfico global (HWSD2) — incorporado
+- [x] 4.1 Descarga de HWSD2.sqlite (67 MB, files.isric.org) y del raster HWSD2.
+- [x] 4.2 `suelo_fao_fill.py`: decodifica SMU→suelo dominante (SHARE)→textura
+      USDA + drenaje + AWC + densidad aparente; retención homogénea con CIREN.
+- [x] 4.3 Cobertura edáfica 32 % → **100 %** (922 CIREN + 1.994 FAO, mayormente
+      Leptosoles altoandinos). Prioridad de inundación estable (159 → 160), lo
+      que confirma que el foco del evento ya estaba cubierto por CIREN.

@@ -5,3 +5,7 @@ __pycache__/
 Thumbs.db
 *.log
 .env
+
+# gran binario externo (descargable): base de atributos HWSD2
+HWSD2.sqlite
+*.gpkg

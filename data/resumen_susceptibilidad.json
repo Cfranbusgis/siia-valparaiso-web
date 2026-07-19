@@ -1,17 +1,17 @@
 {
-  "cobertura_suelo_pct": 31.6,
-  "susc_media": 0.287,
-  "prioridad_media": 0.18,
+  "cobertura_suelo_pct": 100.0,
+  "susc_media": 0.339,
+  "prioridad_media": 0.211,
   "humedales_ge_P90": 468,
-  "prioridad_alta (>=P90 y susc alta)": 159,
+  "prioridad_alta (>=P90 y susc alta)": 160,
   "top_comunas_prioridad": {
-    "Casablanca": 43,
-    "Limache": 17,
+    "Casablanca": 41,
+    "Limache": 19,
     "Algarrobo": 16,
-    "Quilpué": 14,
+    "Quilpué": 16,
     "Valparaíso": 12,
-    "La Ligua": 9,
-    "Quillota": 7,
-    "Quintero": 7
+    "Quillota": 9,
+    "Quintero": 8,
+    "Concón": 8
   }
 }
