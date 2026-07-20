@@ -32,6 +32,17 @@ contraste contra un producto observacional independiente. Además, la Figura 5
 
 - No se adopta CR2MET como climatología principal (termina en 2020).
 
+## Limitación de reproducibilidad
+
+- `cr2met_clim.py` referencia el insumo con una ruta absoluta específica de la
+  máquina de trabajo (`C:\Users\cfran\Downloads\CR2MET_v2.0_pr_day_1979_2020.zip`)
+  en lugar de las variables de entorno `SIIA_*` que exige el requisito de
+  reproducibilidad, y el repositorio no registra la fuente exacta de descarga
+  del NetCDF (URL o DOI del release de CR2MET v2.0). Un tercero no puede
+  re-ejecutar el script sin conseguir el archivo por su cuenta y editar la
+  ruta. Los derivados versionados (`clim_cr2met_years.npz`,
+  `resumen_cr2met.json`) permiten reproducir las comparaciones sin el NetCDF.
+
 ## Results
 
 - Convergencia: normal CR2MET 1991&ndash;2020 (WMO) = 38,8 mm ≈ era5

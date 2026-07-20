@@ -53,8 +53,9 @@
     <div id="layers"></div>
     <div class="lbl">Colorear humedales por</div>
     <div class="btns" id="btns"></div>
-    <div class="lbl">Base</div>
+    <div class="lbl">Mapa base</div>
     <div class="base"><button data-b="claro" class="on">Claro</button><button data-b="sat">Satélite</button></div>
+    <input type="range" class="op" id="baseop" min="0" max="100" value="100" title="Transparencia del mapa base">
     <div class="lbl">Datos y metadatos</div>
     <div class="dl">
       <a href="/humedales_tabla.csv" download>⬇ Tabla de humedales (CSV, 2.916)</a>
@@ -139,6 +140,8 @@ VORDER.forEach(k=>{const b=document.createElement("button");b.textContent=VARS[k
 document.querySelectorAll(".base button").forEach(b=>b.onclick=()=>{const sat=b.dataset.b==="sat";
   map.setLayoutProperty("sat","visibility",sat?"visible":"none");map.setLayoutProperty("claro","visibility",sat?"none":"visible");
   document.querySelectorAll(".base button").forEach(x=>x.classList.toggle("on",x===b));});
+document.getElementById("baseop").oninput=e=>{const o=+e.target.value/100;
+  map.setPaintProperty("claro","raster-opacity",o);map.setPaintProperty("sat","raster-opacity",o);};
 
 map.on("load",()=>{
   map.addSource("region",{type:"geojson",data:"/region_rv.geojson"});

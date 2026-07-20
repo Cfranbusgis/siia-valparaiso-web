@@ -38,6 +38,8 @@
 - [x] 7.5 CONTRIBUTING.md
 
 ## 8. Pendiente
-- [ ] 8.1 Empujar a GitHub las mejoras de reproducibilidad (commit local hecho)
+- [x] 8.1 Empujar a GitHub las mejoras de reproducibilidad (verificado
+      19-jul-2026: `main` sincronizado con `origin/main`, sin commits locales
+      pendientes)
 - [ ] 8.2 Nowcasting: acoplar IVT pronosticado (anticipación)
 - [ ] 8.3 Integrar NDVI/LST (condición de humedales)
