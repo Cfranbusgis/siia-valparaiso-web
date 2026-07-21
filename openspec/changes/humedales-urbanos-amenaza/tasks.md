@@ -147,7 +147,9 @@
       hover en vez del popup de clic — ambos coexisten correctamente.
 - [x] 7.4 Quitado el texto "(superponibles)" junto a la etiqueta "Capas"
       del panel de controles (pedido explícito, sin relación funcional).
-- [ ] 7.5 Pendiente: revisión por Camila; commit/push + `railway up`.
+- [x] 7.5 Revisado por Camila; commit `0306ecb` + push + `railway up`,
+      verificado en el sitio en vivo (tooltip de hover y texto "Capas" sin
+      "(superponibles)" presentes).
 
 ## 8. INCIDENTE — regresión del informe (21-jul-2026), causa raíz y arreglo
 - [x] 8.1 **Qué pasó**: el commit `795228a` (tarea 6) regeneró

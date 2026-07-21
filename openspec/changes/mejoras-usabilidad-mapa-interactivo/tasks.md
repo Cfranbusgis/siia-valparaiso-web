@@ -69,11 +69,35 @@ nombres BNA crudos en leyenda/ficha/hover; a11y: `#pmin`/`#lmin` con nombre
 
 ## 6. Entrega
 - [x] 6.1 Revisión del diff por Camila; commit + push (aprobado).
-- [ ] 6.2 Ajustes de la sección 5: revisión y commit pendiente (no
-      pusheado — desde ahora el despliegue a Railway se hace con
-      `railway up` manual, ver README/CONTRIBUTING actualizar).
+- [x] 6.2 Ajustes de la sección 5: revisados por Camila, comiteados y
+      desplegados con `railway up` manual (ver `humedales-urbanos-amenaza`
+      tarea 6.6 para el detalle del despliegue — el despliegue automático
+      desde GitHub sigue sin funcionar para este servicio, confirmado otra
+      vez en esta sesión; `railway up` manual queda como el procedimiento
+      estándar).
 - [x] 6.3 Refinamiento del grupo "variable" (encabezado con nombre corto en
       vez de la descripción larga, misma mecánica de colapso de 5.2) hecho
       como parte de `humedales-urbanos-amenaza` (tarea 5.4 de esa
       propuesta), no aquí — se deja esta referencia cruzada para que quede
       encontrable desde el dueño original del mecanismo de colapso.
+
+## 7. Brújula propia y ajustes menores (21-jul-2026)
+- [x] 7.1 Brújula personalizada (`CompassControl`, clase `IControl` propia)
+      agregada sobre el control de zoom en `mapa-interactivo.html`, mismo
+      tamaño de botón (29×29) que el +/-; gira con el `bearing` del mapa y
+      restablece el norte al hacer clic. Reemplaza la brújula genérica de
+      `NavigationControl` (que quedaba debajo del zoom, con ícono simple
+      apenas visible) — pedido explícito: "una brújula bonita... como si
+      fuera otro cuadradito". Verificado con Playwright: tamaño correcto,
+      posición sobre el zoom, clic resetea `bearing` a 0.
+- [x] 7.2 Quitado el texto "(superponibles)" junto a la etiqueta "Capas"
+      del panel de controles.
+- [x] 7.3 Título del eje Z del modelo 3D (`public/modelo-3d.html`,
+      "Elevación (m)" → "Elevación en ascendente vertical") — no hay una
+      propuesta OpenSpec dedicada a esa página, se documenta aquí por ser
+      parte del mismo lote de ajustes de navegación/ejes. Editado
+      directamente en el HTML desplegado (no se regeneró con el script
+      generador, ver advertencia en `humedales-urbanos-amenaza` tarea 8).
+- [x] 7.4 Desplegado y verificado en el sitio en vivo (commit `1b70950`):
+      brújula presente, texto "(superponibles)" ausente, título del eje Z
+      actualizado.

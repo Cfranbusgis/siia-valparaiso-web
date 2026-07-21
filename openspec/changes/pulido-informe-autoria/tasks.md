@@ -28,3 +28,14 @@
 
 ## 4. Entrega
 - [x] 4.1 Revisión por Camila; commit + push (aprobado).
+
+## 5. Enlace a LinkedIn (21-jul-2026, pedido posterior)
+- [x] 5.1 Ícono SVG inline junto al de GitHub (mismo estilo, `margin-left`
+      fijo en vez de `auto` ya que el GitHub conserva el empuje a la
+      derecha del nav), enlace a `https://www.linkedin.com/in/cfranbusgis`,
+      `target="_blank"`. Editado directamente en `public/index.html` (no se
+      usó `build_report.py`, ver advertencia agregada en ese script tras el
+      incidente documentado en `humedales-urbanos-amenaza` tarea 8).
+- [x] 5.2 Verificado con Playwright local (`href` correcto) y en el sitio
+      en vivo tras el despliegue (commit `6d25a7b`).
+- [ ] 5.3 Pendiente: confirmación visual de Camila.
