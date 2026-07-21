@@ -36,7 +36,12 @@ const server = http.createServer((req, res) => {
       return res.end("<h1>404</h1><p>Recurso no encontrado.</p>");
     }
     const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, { "Content-Type": TYPES[ext] || "application/octet-stream" });
+    // sin esto el navegador puede quedarse con una copia vieja del sitio
+    // (visto en produccion: cambios pusheados que no se reflejaban)
+    res.writeHead(200, {
+      "Content-Type": TYPES[ext] || "application/octet-stream",
+      "Cache-Control": "no-cache",
+    });
     res.end(data);
   });
 });
