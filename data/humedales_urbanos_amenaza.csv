@@ -1,0 +1,22 @@
+id_solicitud,nombre,comuna,tipo_final,area_ha,pct_solape_2013,n_poligonos_2013,pctl_empirico,amenaza_inundacion,susc_inundacion,expo_suelo,clase_amenaza,fuente,twi_norm,acc_topo,prox_rio,fuente_suelo,confianza,estacion_dmc_cercana,dist_estacion_km,estacion_agua24h_mm
+7,Reserva Natural Municipal Piedras Blancas,LIMACHE,natural,70.12,31.3,1,93.8,0.539,0.615,0.717,Muy Alta,heredado_solape,,,,,media (solape parcial),Quillota  Liceo Agrícola,9.4,84.9
+6,Los Maitenes - Campiche,PUCHUNCAVÍ,natural,505.2,45.5,12,87.50000000000001,0.5089582074102362,0.6791896122358971,0.9805549980598028,Muy Alta,heredado_solape,,,,,media (solape parcial),Quintero  Climatológica,6.7,31.4
+5,Humedales de Quirilluca,PUCHUNCAVÍ,natural,34.53,25.0,2,87.5,0.4714185894899167,0.6280612904523883,1.0,Muy Alta,heredado_solape,,,,,"baja (solape < 30%, revisar manualmente)",Quintero  Climatológica,10.5,31.4
+164,Estero El Jote,CASABLANCA,natural,1.65,37.3,1,93.8,0.468,0.534,0.55,Muy Alta,heredado_solape,,,,,media (solape parcial),Rodelillo  Ad.,17.7,67.1
+20,Estero El Litre,CALERA,natural,4.43,68.4,3,90.6,0.450418062862354,0.5549895931853794,0.5041693733784587,Muy Alta,heredado_solape,,,,,media (solape parcial),Quillota  Liceo Agrícola,16.9,84.9
+43,Mayaca,QUILLOTA,natural,234.61,94.1,3,93.80000000000001,0.4464128675353119,0.509543890626603,0.553,Muy Alta,heredado_solape,,,,,alta,Quillota  Liceo Agrícola,5.0,84.9
+28,Estuario Los Molles,LA LIGUA,natural,10.65,42.1,2,90.6,0.44447941887940134,0.5472371606897701,0.236,Muy Alta,heredado_solape,,,,,media (solape parcial),Zapallar Catapilco,41.4,1.2
+32,"Estero Quilpué, sector Quilpué",QUILPUÉ,natural,20.33,40.9,1,90.6,0.418,0.515,0.717,Muy Alta,heredado_solape,,,,,media (solape parcial),Jardín Botánico (ex Parque Fauna)  Viña del Mar,2.3,64.2
+170,Kan Kan,VIÑA DEL MAR,sin dato,1.55,0.0,0,90.6,0.409,0.504,0.0,Muy Alta,muestreo_directo,1.0,0.016,1.0,CIREN,"media (muestreo directo, sin promedio espacial)",Rodelillo  Ad.,3.0,67.1
+162,Estero Reñaca,VIÑA DEL MAR,natural,16.9,21.4,1,90.6,0.377,0.465,0.236,Alta,heredado_solape,,,,,"baja (solape < 30%, revisar manualmente)",Viña del Mar  Ad. (Torquemada),4.6,64.7
+67,Mantagua,QUINTERO,natural,43.58,79.2,6,87.5,0.36707265758070406,0.48923874597692046,0.5410863716831641,Alta,heredado_solape,,,,,media (solape parcial),Viña del Mar  Ad. (Torquemada),8.6,64.7
+163,Laguna El Criquet y Quebrada Honda,VALPARAÍSO,mixto,2.57,48.0,1,93.8,0.361,0.413,0.55,Alta,heredado_solape,,,,,media (solape parcial),Rodelillo  Ad.,8.0,67.1
+15,Estero Quilpué,VILLA ALEMANA,natural,8.36,47.0,1,93.8,0.357,0.408,0.0,Alta,heredado_solape,,,,,media (solape parcial),Jardín Botánico (ex Parque Fauna)  Viña del Mar,13.4,64.2
+48,Estero Agua Salada,PAPUDO,natural,4.46,66.3,1,87.5,0.357,0.476,0.2,Alta,heredado_solape,,,,,media (solape parcial),Zapallar Catapilco,14.3,1.2
+169,Humedal El Totoral,PAPUDO,natural,0.6,87.7,1,87.5,0.343,0.457,0.236,Alta,heredado_solape,,,,,alta,Zapallar Catapilco,13.9,1.2
+167,Humedal El Batro,EL QUISCO,artificial,2.26,8.9,1,81.2,0.332,0.532,0.717,Alta,heredado_solape,,,,,"baja (solape < 30%, revisar manualmente)",San Antonio  Lo Zarate,21.8,31.8
+44,Tranque Cerro La Huinca,LIMACHE,artificial,0.13,0.0,0,93.8,0.31,0.353,0.55,Moderada,muestreo_directo,0.236,0.53,0.097,CIREN,"media (muestreo directo, sin promedio espacial)",Quillota  Liceo Agrícola,7.8,84.9
+1237,El Bato,QUINTERO,sin dato,2.38,0.0,0,87.5,0.28,0.373,0.236,Baja,muestreo_directo,0.597,0.277,0.381,FAO,"media (muestreo directo, sin promedio espacial)",Quintero  Climatológica,2.4,31.4
+177,Entre Cerros,VIÑA DEL MAR,natural,0.63,0.0,0,90.6,0.28,0.344,0.236,Baja,muestreo_directo,0.142,0.0,1.0,FAO,"media (muestreo directo, sin promedio espacial)",Jardín Botánico (ex Parque Fauna)  Viña del Mar,1.8,64.2
+47,Canal Waddington en Cerro La Huinca,LIMACHE,natural,1.12,0.0,0,93.8,0.214,0.244,0.55,Muy Baja,muestreo_directo,0.186,0.034,0.206,CIREN,"media (muestreo directo, sin promedio espacial)",Quillota  Liceo Agrícola,8.0,84.9
+1222,"Sistema de lagunas de Llolleo, Ojos de Mar",SAN ANTONIO,sin dato,18.39,45.5,3,78.09999999999998,0.13429375454621292,0.23937440973934043,0.0,Muy Baja,heredado_solape,,,,,media (solape parcial),Santo Domingo  Ad.,5.3,31.8

@@ -72,3 +72,8 @@ nombres BNA crudos en leyenda/ficha/hover; a11y: `#pmin`/`#lmin` con nombre
 - [ ] 6.2 Ajustes de la sección 5: revisión y commit pendiente (no
       pusheado — desde ahora el despliegue a Railway se hace con
       `railway up` manual, ver README/CONTRIBUTING actualizar).
+- [x] 6.3 Refinamiento del grupo "variable" (encabezado con nombre corto en
+      vez de la descripción larga, misma mecánica de colapso de 5.2) hecho
+      como parte de `humedales-urbanos-amenaza` (tarea 5.4 de esa
+      propuesta), no aquí — se deja esta referencia cruzada para que quede
+      encontrable desde el dueño original del mecanismo de colapso.

@@ -1,0 +1,41 @@
+{
+  "n_total": 21,
+  "con_solape_2013": 16,
+  "muestreo_directo": 5,
+  "clases_amenaza": {
+    "Muy Alta": 9,
+    "Alta": 7,
+    "Baja": 2,
+    "Muy Baja": 2,
+    "Moderada": 1
+  },
+  "confianza": {
+    "media (solape parcial)": 11,
+    "media (muestreo directo, sin promedio espacial)": 5,
+    "baja (solape < 30%, revisar manualmente)": 3,
+    "alta": 2
+  },
+  "comunas": {
+    "LIMACHE": 3,
+    "VIÑA DEL MAR": 3,
+    "PUCHUNCAVÍ": 2,
+    "QUINTERO": 2,
+    "PAPUDO": 2,
+    "CASABLANCA": 1,
+    "CALERA": 1,
+    "QUILLOTA": 1,
+    "LA LIGUA": 1,
+    "QUILPUÉ": 1,
+    "VALPARAÍSO": 1,
+    "VILLA ALEMANA": 1,
+    "EL QUISCO": 1,
+    "SAN ANTONIO": 1
+  },
+  "amenaza_media": 0.375,
+  "quintiles_poblacion_completa_2916": [
+    0.229,
+    0.286,
+    0.331,
+    0.398
+  ]
+}

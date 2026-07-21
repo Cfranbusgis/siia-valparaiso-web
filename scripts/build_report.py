@@ -13,8 +13,11 @@ import base64
 import json
 from pathlib import Path
 
+import pandas as pd
+
 import config
 HERE = config.WORK_DIR
+ROOT = Path(__file__).resolve().parent.parent
 R = json.loads((HERE / "resumen_valpo.json").read_text(encoding="utf-8"))
 T = json.loads((HERE / "resumen_topo.json").read_text(encoding="utf-8"))
 
@@ -89,6 +92,35 @@ topo_com_rows = "".join(
     f'<tr><td>{n}</td><td class="num strong">{es(v,2)}</td>'
     f'<td class="bar"><span style="width:{v/0.9*100:.0f}%"></span></td></tr>'
     for n, v in TOPO_COM)
+
+# ---- humedales urbanos (Ley 21.202): ranking de comunas por amenaza media ----
+_CONECTORES = {"de", "del", "la", "las", "los"}
+
+
+def com_case(nombre: str) -> str:
+    """Capitaliza por palabra sin usar str.title() (que rompe 'Viña del Mar' ->
+    'Viña Del Mar' y maltrata tildes); conectores en minúscula salvo la primera
+    palabra."""
+    palabras = nombre.strip().lower().split()
+    return " ".join(
+        w if (i > 0 and w in _CONECTORES) else w[:1].upper() + w[1:]
+        for i, w in enumerate(palabras))
+
+
+URB = pd.read_csv(ROOT / "data" / "humedales_urbanos_amenaza.csv", encoding="utf-8")
+URB_N = len(URB)
+URB_ALTA = int(URB["clase_amenaza"].isin(["Alta", "Muy Alta"]).sum())
+URB_AMENAZA_MEDIA = float(URB["amenaza_inundacion"].mean())
+URB_BAJA_CONF = int(URB["confianza"].str.startswith("baja").sum())
+URB_COM = (URB.groupby("comuna")
+           .agg(n=("id_solicitud", "size"), amenaza_media=("amenaza_inundacion", "mean"))
+           .sort_values("amenaza_media", ascending=False).reset_index())
+URB_COM_MAX = URB_COM["amenaza_media"].max()
+urb_comuna_rows = "".join(
+    f'<tr><td>{com_case(r.comuna)}</td><td class="num">{int(r.n)}</td>'
+    f'<td class="num strong">{es(r.amenaza_media,2)}</td>'
+    f'<td class="bar"><span style="width:{r.amenaza_media/URB_COM_MAX*100:.0f}%"></span></td></tr>'
+    for r in URB_COM.itertuples())
 
 METAR = [
     ("SCVM · Viña del Mar / Concón",
@@ -399,6 +431,47 @@ constituyen un primer conjunto de prioridad territorial para seguimiento.</p>
 constituye una estimación de inundación, sino un indicador de prioridad que integra
 dos dimensiones de la exposición. Valores derivados del modelo digital de elevación
 ASTER GDEM (250 m) y del análisis de precipitación descrito.</p>
+
+<h2>Humedales urbanos reconocidos (Ley 21.202)</h2>
+<p>Además del inventario regional de 2.916 humedales, la Región de Valparaíso cuenta con
+<strong>21 humedales urbanos formalmente reconocidos</strong> bajo la Ley 21.202 &mdash; un
+proceso administrativo de solicitud y reconocimiento distinto e independiente del inventario
+base de 2013. A cada uno se le aplicó la misma metodología de amenaza de
+inundación/saturación descrita en este informe: cuando el polígono del humedal urbano solapa
+con el inventario base, sus valores se heredan por promedio ponderado según el área de
+intersección; cuando no hay solape (5 de 21), se muestrea directamente el mismo conjunto de
+variables (percentil meteorológico, TWI, concavidad, retención de suelo, cercanía a cauces
+oficiales) sobre el punto representativo del polígono. En ambos casos se usan los mismos
+umbrales de clasificación (quintiles) calculados sobre la población completa de 2.916, para
+mantener comparabilidad con el resto del informe.</p>
+<section class="stats">
+  <div class="stat"><div class="k">Humedales urbanos reconocidos</div>
+    <div class="v">21</div>
+    <div class="s">Región de Valparaíso, Ley 21.202 (al 19 de julio de 2026).</div></div>
+  <div class="stat"><div class="k">Con amenaza Alta o Muy Alta</div>
+    <div class="v">{URB_ALTA} de {URB_N}</div>
+    <div class="s">Clasificados con los mismos quintiles que la población completa.</div></div>
+  <div class="stat"><div class="k">Amenaza media</div>
+    <div class="v">{es(URB_AMENAZA_MEDIA,3)}</div>
+    <div class="s">Frente a 0,318 en la población completa de 2.916 &mdash; los humedales
+    urbanos declarados están, en conjunto, algo más expuestos que el promedio regional.</div></div>
+  <div class="stat"><div class="k">Confianza baja (revisar)</div>
+    <div class="v">{URB_BAJA_CONF} de {URB_N}</div>
+    <div class="s">Solape parcial menor al 30&nbsp;% con el inventario base; incluye un caso ya
+    marcado para re-auditoría.</div></div>
+</section>
+<h4 style="font-size:1rem;margin:1.2em 0 .3em">Ranking de comunas por amenaza media en sus humedales urbanos</h4>
+<div class="tablewrap"><table>
+  <thead><tr><th>Comuna</th><th class="num">N&deg; humedales urbanos</th>
+    <th class="num">Amenaza media</th><th>Intensidad relativa</th></tr></thead>
+  <tbody>{urb_comuna_rows}</tbody>
+</table></div>
+<p class="muted">Amenaza de inundación/saturación (0&ndash;1), misma definición y umbrales que
+la sección anterior, aplicada a los 21 humedales urbanos reconocidos (incluye los 2
+artificiales y el mixto que, por no tener contraparte directa y comparable en el inventario
+base, no se muestran en la capa coloreable del mapa interactivo). Detalle completo por
+humedal &mdash; percentil, susceptibilidad, retención de suelo, nivel de confianza del dato y
+estación DMC/DGAC más cercana &mdash; en <code>data/humedales_urbanos_amenaza.csv</code>.</p>
 
 <h2>Contraste entre observaciones y modelos</h2>
 <p>Debido al desfase temporal en la publicación de ERA5-Land, la precipitación

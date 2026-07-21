@@ -125,6 +125,7 @@ function colorExpr(k){const V=VARS[k];
   const e=["match",["coalesce",["get",k],"?"]];V.cats.forEach(([v,c])=>e.push(v,c));e.push("#bbb");return e;}
 function setColor(k){cvar=k;
   if(map.getLayer("hpoly"))map.setPaintProperty("hpoly","fill-color",colorExpr(k));
+  if(map.getLayer("hurb-fill"))map.setPaintProperty("hurb-fill","fill-color",colorExpr(k));
   document.querySelectorAll("#btns button").forEach(b=>{const on=b.dataset.k===k;
     b.classList.toggle("on",on);b.setAttribute("aria-pressed",on);});
   drawLegend();}
@@ -135,17 +136,20 @@ function legGroup(key,title,bodyHtml){
     `<div class="lg-head"><b>${title}</b><button class="lg-min" aria-expanded="${!c}" `+
     `aria-label="${c?"Expandir":"Minimizar"} ${title}">${c?"+":"–"}</button></div>`+
     `<div class="lg-body">${bodyHtml}</div></div>`;}
-function drawLegend(){const V=VARS[cvar];let body="";
+function drawLegend(){const V=VARS[cvar];let body=
+    `<div style="font-size:.7rem;color:#5a6b7a;margin-bottom:4px">${V.leg}</div>`;
   if(V.type==="cat"){V.cats.forEach(([v,c])=>body+=`<div class="row"><span class="sw" style="background:${c}"></span>${v}</div>`);
     body+=`<div class="row"><span class="sw" style="background:#bbb"></span>sin dato</div>`;}
   else V.stops.forEach(([v,c])=>body+=`<div class="row"><span class="sw" style="background:${c}"></span>${V.fmt(v)}</div>`);
-  let h=legGroup("variable",V.leg,body);
+  let h=legGroup("variable",V.label,body);
   if(document.querySelector('input[data-l="cuencas"]').checked){
     let cb="";CUENCAS.forEach(([v,c])=>cb+=`<div class="row"><span class="sw" style="background:${c};opacity:.6"></span>${cuLbl(v)}</div>`);
     h+=legGroup("cuencas","Cuencas",cb);}
   if(document.querySelector('input[data-l="urbanos"]').checked){
-    let ub="";URB_CLASES.forEach(([,txt,c])=>ub+=`<div class="row"><span class="sw" style="background:${c}"></span>${txt}</div>`);
-    ub+='<div style="font-size:.7rem;color:#5a6b7a;margin-top:2px">18 humedales reconocidos; % exacto de solape en la ficha de cada uno</div>';
+    let ub=`<div style="font-size:.7rem;color:#5a6b7a;margin-bottom:4px">Relleno: mismo esquema de color `+
+      `de "${V.label}" que arriba. Borde:</div>`;
+    URB_CLASES.forEach(([,txt,c])=>ub+=`<div class="row"><span class="sw" style="background:#fff;border-color:${c};border-width:2px"></span>${txt}</div>`);
+    ub+='<div style="font-size:.7rem;color:#5a6b7a;margin-top:2px">18 humedales reconocidos incluidos (de 21: excluye 2 artificiales y 1 mixto); % exacto de solape y nivel de confianza del dato en la ficha de cada uno</div>';
     h+=legGroup("urbanos","Humedales urbanos (Ley 21.202)",ub);}
   document.getElementById("legendbody").innerHTML=h;
   document.querySelectorAll(".leg-group").forEach(g=>{
@@ -207,10 +211,10 @@ map.on("load",()=>{
 
   map.addSource("hu",{type:"geojson",data:"/humedales_urbanos.geojson",tolerance:0});
   map.addLayer({id:"hurb-fill",type:"fill",source:"hu",paint:{
-    "fill-color":["match",["get","clase"],...URB_CLASES.flatMap(([v,,c])=>[v,c]),"#999"],
-    "fill-opacity":0.85}});
+    "fill-color":colorExpr(cvar),"fill-opacity":0.85}});
   map.addLayer({id:"hurb-line",type:"line",source:"hu",paint:{
-    "line-color":"#12303f","line-width":1.6,"line-dasharray":[2,1]}});
+    "line-color":["match",["get","clase"],...URB_CLASES.flatMap(([v,,c])=>[v,c]),"#12303f"],
+    "line-width":1.8,"line-dasharray":[2,1]}});
   const pop=new maplibregl.Popup({closeButton:true,maxWidth:"280px"});
   map.on("click","hpoly",e=>{const p=e.features[0].properties;
     pop.setLngLat(e.lngLat).setHTML(
@@ -225,9 +229,15 @@ map.on("load",()=>{
 
   map.on("click","hurb-fill",e=>{const p=e.features[0].properties;
     const bajaConfianza=String(p.cg).startsWith("baja");
+    const bajaAmenaza=String(p.cf||"").startsWith("baja");
     pop.setLngLat(e.lngLat).setHTML(
       `<b>${p.n}</b> · Humedal Urbano (Ley 21.202)<br>${p.c} · ${(+p.area_ha).toFixed(1)} ha<br>`+
       `Clasificación: <b>${p.tc==="natural"?"Natural":"Sin dato"}</b><br>`+
+      (p.p!=null?`Percentil: <b>P${(+p.p).toFixed(0)}</b><br>`:"")+
+      (p.cl?`Amenaza de inundación: <b>${p.cl}</b><br>`:"")+
+      (p.s!=null?`Susceptibilidad ${(+p.s).toFixed(2)} · Retención suelo ${p.su!=null?(+p.su).toFixed(2):"s/d"}<br>`:"")+
+      (bajaAmenaza?`<span style="color:#c0392b">⚠ Confianza del dato de amenaza: ${p.cf}</span><br>`
+        :(p.cf?`Confianza del dato de amenaza: ${p.cf}<br>`:""))+
       (p.n2013>0
         ? `Solapa ${(+p.pct2013).toFixed(0)}% de su área con ${p.n2013} polígono(s) del inventario 2013`+
           (p.nom2013?` (${p.nom2013})`:"")+"<br>"
