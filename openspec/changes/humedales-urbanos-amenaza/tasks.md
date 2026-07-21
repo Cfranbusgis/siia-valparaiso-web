@@ -115,4 +115,79 @@
       `informe-humedales-urbanos.png`): la sección se ve con el mismo
       estilo que el resto del informe (tarjetas + tabla con barras), en el
       lugar correcto del documento.
-- [ ] 6.6 Pendiente: revisión por Camila; commit/push + `railway up`.
+- [x] 6.6 Revisado por Camila; commit `795228a` + push + `railway up`
+      (desplegado y verificado en el sitio en vivo: la sección nueva del
+      informe y "Identificación de humedales" en el mapa están presentes).
+
+## 7. Interactividad al pasar el cursor (hover), pedida tras el primer
+      despliegue: "el mapa de humedales urbanos aún no es interactivo
+      cuando muevo el cursor ni tiene vinculada la identificación de
+      humedales con sus percentiles o amenaza"
+- [x] 7.1 Antes, `hpoly` y `hurb-fill` solo respondían a clic (con
+      `mouseenter`/`mouseleave` cambiando únicamente el cursor, sin
+      contenido) — a diferencia de `cuencas-fill`, que sí mostraba un
+      tooltip al pasar el cursor. Se agregó el mismo patrón a ambas capas
+      de humedales: un popup de hover (`hvpop`, sin botón de cierre, no se
+      cierra al hacer clic) que sigue al cursor y muestra nombre + comuna +
+      el **valor de la variable activa** (`varTxt()`, misma variable que el
+      cuadro "Identificación de humedales" / `#btns`), sin necesidad de
+      clic. El popup de clic detallado (`pop`) se mantiene intacto para
+      quien quiera el detalle completo.
+- [x] 7.2 Diferenciador por capa en el tooltip de hover: humedales urbanos
+      agrega una línea con el % de solape con el inventario 2013 (o "Sin
+      solape"), que la capa base no tiene — cumple "desplegando su
+      información diferenciadora".
+- [x] 7.3 Verificado con Playwright (`test-hover-tooltip.mjs`): el tooltip
+      aparece al mover el cursor (sin clic) sobre un humedal urbano real,
+      muestra "Percentil: P88" (variable por defecto) y "Solapa 25% con
+      inventario 2013"; al cambiar la variable activa a "Amenaza" el mismo
+      tooltip pasa a mostrar "Amenaza: Muy Alta"; desaparece al alejar el
+      cursor. Regresión: se corrigió `test-urbanos-amenaza.mjs`, que
+      tomaba el primer popup del DOM y ahora podía capturar el tooltip de
+      hover en vez del popup de clic — ambos coexisten correctamente.
+- [x] 7.4 Quitado el texto "(superponibles)" junto a la etiqueta "Capas"
+      del panel de controles (pedido explícito, sin relación funcional).
+- [ ] 7.5 Pendiente: revisión por Camila; commit/push + `railway up`.
+
+## 8. INCIDENTE — regresión del informe (21-jul-2026), causa raíz y arreglo
+- [x] 8.1 **Qué pasó**: el commit `795228a` (tarea 6) regeneró
+      `public/index.html` corriendo `scripts/build_report.py` +
+      `assemble_web.py`, como se había hecho antes sin problema para
+      agregar la sección de humedales urbanos. Pero `build_report.py`
+      llevaba **~15 commits desactualizado** respecto del informe real:
+      nunca tuvo (o perdió en algún punto) las secciones "Susceptibilidad y
+      amenaza de inundación", "Validación observacional y corrección de
+      sesgo", "Validación con un producto observacional independiente
+      (CR2MET)", "Auditoría del análisis", "Alcances de mejora" y
+      "Referencias" — contenido que en su momento se agregó a
+      `public/index.html` (a mano o con otra versión del script) sin
+      retroalimentar esta plantilla. Al regenerar, esas ~15 secciones se
+      borraron del sitio en vivo. Camila lo detectó ("volvió al reporte
+      inicial prácticamente") minutos después del despliegue.
+- [x] 8.2 **Causa raíz**: `scripts/build_report.py` construye el HTML
+      completo desde una plantilla hardcodeada en el propio script — no es
+      una plantilla + parche, así que correrlo **sobrescribe**
+      `public/index.html` entero. En algún momento previo a esta sesión, el
+      informe se extendió sin mantener el script sincronizado, dejando una
+      trampa: el script parecía "la fuente de verdad" pero ya no lo era.
+- [x] 8.3 **Arreglo**: se restauró `public/index.html` desde el commit
+      anterior a la regresión (`09a3b26`, íntegro, 16 secciones) y se le
+      insertó **únicamente** el fragmento de la sección nueva (Humedales
+      urbanos reconocidos) extraído del archivo roto, en el mismo lugar
+      (después de "Susceptibilidad y amenaza de inundación"). Verificado a
+      nivel de bytes (UTF-8 válido, sin errores de decodificación) y con
+      `grep` de las 6 secciones que habían desaparecido + la nueva —
+      confirmado en local y en el sitio en vivo tras el redepliegue
+      (commit `f31129d`).
+- [x] 8.4 **Prevención**: advertencia explícita agregada al inicio de
+      `scripts/build_report.py` y dentro de `build_index()` en
+      `scripts/assemble_web.py` — no volver a correr esa regeneración
+      completa hasta reconciliar la plantilla con el contenido real de
+      `public/index.html`. Para cambios puntuales al informe, editar
+      `public/index.html` directamente (como se hizo en este arreglo).
+- [ ] 8.5 Pendiente, no resuelto en esta sesión: reconciliar
+      `scripts/build_report.py` con el contenido real de
+      `public/index.html` (traer las ~6 secciones faltantes a la
+      plantilla), para que el script vuelva a ser una fuente de verdad
+      segura. Mientras tanto, **cualquier cambio al informe debe hacerse
+      editando `public/index.html` directamente**, no regenerando.

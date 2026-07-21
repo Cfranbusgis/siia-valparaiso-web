@@ -56,7 +56,7 @@
 <div class="card panel" id="panel">
   <div class="head" id="phead"><span>Controles</span><button class="min" id="pmin">–</button></div>
   <div class="body">
-    <div class="lbl">Capas (superponibles)</div>
+    <div class="lbl">Capas</div>
     <div id="layers"></div>
     <div class="lbl">Identificación de humedales</div>
     <div class="btns" id="btns"></div>
@@ -224,8 +224,17 @@ map.on("load",()=>{
       `Amenaza de inundación: <b>${p.cl}</b><br>`+
       `Susceptibilidad ${(+p.s).toFixed(2)} · Retención suelo ${p.su!=null?(+p.su).toFixed(2):"s/d"}`+
       (p.se&&p.se!=="NO SUELOS"?`<br>Serie de suelo: <b>${p.se}</b>`:"")).addTo(map);});
-  map.on("mouseenter","hpoly",()=>map.getCanvas().style.cursor="pointer");
-  map.on("mouseleave","hpoly",()=>map.getCanvas().style.cursor="");
+
+  // valor de la variable activa (la elegida en "Identificación de humedales"),
+  // reutilizado en el tooltip de ambas capas de humedales
+  function varTxt(p){const V=VARS[cvar],val=p[cvar];
+    if(val==null||val==="")return `${V.label}: <span style="color:#8a99a6">sin dato</span>`;
+    const txt=V.type==="cat"?val:V.fmt(+val);
+    return `${V.label}: <b>${txt}</b>`;}
+  const hvpop=new maplibregl.Popup({closeButton:false,closeOnClick:false,maxWidth:"240px"});
+  map.on("mousemove","hpoly",e=>{map.getCanvas().style.cursor="pointer";const p=e.features[0].properties;
+    hvpop.setLngLat(e.lngLat).setHTML(`<b>${p.n}</b><br>${p.c}<br>${varTxt(p)}`).addTo(map);});
+  map.on("mouseleave","hpoly",()=>{hvpop.remove();map.getCanvas().style.cursor="";});
 
   map.on("click","hurb-fill",e=>{const p=e.features[0].properties;
     const bajaConfianza=String(p.cg).startsWith("baja");
@@ -246,8 +255,12 @@ map.on("load",()=>{
         ? `<span style="color:#c0392b">⚠ Confianza geométrica baja — límite pendiente de revisión, ver openspec/changes/humedales-urbanos-mma</span>`
         : `Confianza geométrica: ${p.cg}`)
     ).addTo(map);});
-  map.on("mouseenter","hurb-fill",()=>map.getCanvas().style.cursor="pointer");
-  map.on("mouseleave","hurb-fill",()=>map.getCanvas().style.cursor="");
+  map.on("mousemove","hurb-fill",e=>{map.getCanvas().style.cursor="pointer";const p=e.features[0].properties;
+    const solapeTxt=p.n2013>0?`Solapa ${(+p.pct2013).toFixed(0)}% con inventario 2013`:"Sin solape con inventario 2013";
+    hvpop.setLngLat(e.lngLat).setHTML(
+      `<b>${p.n}</b> · Humedal Urbano<br>${p.c}<br>${varTxt(p)}<br>`+
+      `<span style="font-size:.75rem;color:#5a6b7a">${solapeTxt}</span>`).addTo(map);});
+  map.on("mouseleave","hurb-fill",()=>{hvpop.remove();map.getCanvas().style.cursor="";});
   // nombre de cuenca al pasar el cursor
   const cupop=new maplibregl.Popup({closeButton:false,closeOnClick:false,maxWidth:"240px"});
   map.on("mousemove","cuencas-fill",e=>{map.getCanvas().style.cursor="help";
