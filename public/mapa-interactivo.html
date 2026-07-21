@@ -117,7 +117,29 @@ const map=new maplibregl.Map({container:"map",style:{version:8,sources:{
     tiles:["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"]}},
   layers:[{id:"claro",type:"raster",source:"claro"},{id:"sat",type:"raster",source:"sat",layout:{visibility:"none"}}]},
   center:[-71.05,-32.9],zoom:7.4});
-map.addControl(new maplibregl.NavigationControl(),"top-right");
+// brujula propia (mismo tamaño que el boton +/-), sobre el control de zoom
+class CompassControl{
+  onAdd(m){this._map=m;
+    const c=document.createElement("div");c.className="maplibregl-ctrl maplibregl-ctrl-group";
+    const b=document.createElement("button");b.type="button";b.title="Norte";
+    b.setAttribute("aria-label","Restablecer orientación al norte");
+    b.style.cssText="width:29px;height:29px;display:flex;align-items:center;justify-content:center;background:#fff;border:none;cursor:pointer;padding:0";
+    b.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" style="transition:transform .25s ease">
+      <circle cx="12" cy="12" r="10.2" fill="none" stroke="#0b3d66" stroke-width="1.3"/>
+      <path d="M12 3.2 L15 12 L12 11 L9 12 Z" fill="#0b3d66"/>
+      <path d="M12 20.8 L9 12 L12 13 L15 12 Z" fill="#b9c6d1"/>
+      <text x="12" y="7.6" font-size="4.6" font-family="Arial,sans-serif" font-weight="700"
+        text-anchor="middle" fill="#0b3d66">N</text>
+    </svg>`;
+    this._icon=b.querySelector("svg");
+    b.onclick=()=>m.easeTo({bearing:0,pitch:0,duration:300});
+    this._upd=()=>{this._icon.style.transform=`rotate(${-m.getBearing()}deg)`;};
+    m.on("rotate",this._upd);
+    c.appendChild(b);this._container=c;return c;}
+  onRemove(){this._container.remove();this._map.off("rotate",this._upd);this._map=undefined;}
+}
+map.addControl(new CompassControl(),"top-right");
+map.addControl(new maplibregl.NavigationControl({showCompass:false}),"top-right");
 map.addControl(new maplibregl.ScaleControl({unit:"metric"}),"bottom-right");
 
 function colorExpr(k){const V=VARS[k];
