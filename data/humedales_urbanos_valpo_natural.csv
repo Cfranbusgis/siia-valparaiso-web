@@ -1,0 +1,19 @@
+﻿id_solicitud,nombre,expediente,fecha_ingreso_ms,estado,vigente,comuna,provincia,region,superficie_ha,clasificacion,tipo_final
+5,Humedales de Quirilluca,HU-0007,1677767326107,Humedal Urbano Reconocido,Sí,PUCHUNCAVÍ,VALPARAÍSO,REGIÓN DE VALPARAÍSO,34.515838,Humedal natural palustre permanente,natural
+6,Los Maitenes - Campiche,HU-0008,1677767326107,Humedal Urbano Reconocido,Sí,PUCHUNCAVÍ,VALPARAÍSO,REGIÓN DE VALPARAÍSO,504.945283,Humedal natural palustre permanente,natural
+7,Reserva Natural Municipal Piedras Blancas,HU-0009,1677767326110,Humedal Urbano Reconocido,Sí,LIMACHE,MARGA MARGA,REGIÓN DE VALPARAÍSO,70.096226,Humedal natural ribereño permanente,natural
+15,Estero Quilpué,HU-0020,1677767326123,Humedal Urbano Reconocido,Sí,VILLA ALEMANA,MARGA MARGA,REGIÓN DE VALPARAÍSO,8.360277,Humedal natural ribereño permanente,natural
+20,Estero El Litre,HU-0030,1677767326133,Humedal Urbano Reconocido,Sí,CALERA,QUILLOTA,REGIÓN DE VALPARAÍSO,4.425747,Humedal natural ribereño permanente,natural
+28,Estuario Los Molles,HU-0042,1677767326163,Humedal Urbano Reconocido,Sí,LA LIGUA,PETORCA,REGIÓN DE VALPARAÍSO,9.216614,"Humedal natural estuarino, ribereño y palustre permanente",natural
+32,"Estero Quilpué, sector Quilpué",HU-0053,1677767326170,Humedal Urbano Reconocido,Sí,QUILPUÉ,MARGA MARGA,REGIÓN DE VALPARAÍSO,20.316661,Humedal natural ribereño permanente,natural
+43,Mayaca,HU-0071,1677767326193,Humedal Urbano Reconocido,Sí,QUILLOTA,QUILLOTA,REGIÓN DE VALPARAÍSO,234.542258,Humedal natural ribereño,natural
+47,Canal Waddington en Cerro La Huinca,HU-0076,1677767326203,Humedal Urbano Reconocido,Sí,LIMACHE,MARGA MARGA,REGIÓN DE VALPARAÍSO,1.12414,Humedal natural ribereño,natural
+48,Estero Agua Salada,HU-0078,1677767326207,Humedal Urbano Reconocido,Sí,PAPUDO,PETORCA,REGIÓN DE VALPARAÍSO,4.456408,Humedal natural ribereño permanente,natural
+67,Mantagua,HU-0100,1678317099410,Humedal Urbano Reconocido,Sí,QUINTERO,VALPARAÍSO,REGIÓN DE VALPARAÍSO,41.62073704,"Humedal marino costero, estuarino, palustre, ribereño y laguna salada",natural
+162,Estero Reñaca,MU-05-162,1690552755290,Humedal Urbano Reconocido,Sí,VIÑA DEL MAR,VALPARAÍSO,REGIÓN DE VALPARAÍSO,233.4,"Continentales, ribereños, permanentes",natural
+164,Estero El Jote,MU-05-164,1690555900267,Humedal Urbano Reconocido,Sí,CASABLANCA,VALPARAÍSO,REGIÓN DE VALPARAÍSO,2.8,"Humedal continental, ribereño, permanente",natural
+169,Humedal El Totoral,MU-05-169,1690571246000,Humedal Urbano Reconocido,Sí,PAPUDO,PETORCA,REGIÓN DE VALPARAÍSO,0.2,2.1.1 Continental estacional,natural
+170,Kan Kan,MU-05-170,1690572421217,Humedal Urbano Reconocido,Sí,VIÑA DEL MAR,VALPARAÍSO,REGIÓN DE VALPARAÍSO,11.22,No señala,sin dato
+177,Entre Cerros,MU-05-177,1690917204393,Humedal Urbano Reconocido,Sí,VIÑA DEL MAR,VALPARAÍSO,REGIÓN DE VALPARAÍSO,1,Ríos y esteros estacionales o irregulares,natural
+1222,"Sistema de lagunas de Llolleo, Ojos de Mar",MU-05-1222,1706198331820,Humedal Urbano Reconocido,Sí,SAN ANTONIO,SAN ANTONIO,REGIÓN DE VALPARAÍSO,47.13,,sin dato
+1237,El Bato,MU-05-1237,1730917727190,Humedal Urbano Reconocido,Sí,QUINTERO,VALPARAÍSO,REGIÓN DE VALPARAÍSO,2.38,,sin dato

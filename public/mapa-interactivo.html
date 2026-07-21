@@ -22,6 +22,7 @@
   .head .min{border:none;background:#eef2f6;color:var(--nav);border-radius:6px;width:22px;height:22px;
     font-size:1rem;line-height:1;cursor:pointer}
   .body{padding:0 12px 12px}
+  .panel .body{max-height:calc(100vh - 132px);overflow-y:auto}
   .collapsed .body{display:none}
   .lbl{font-weight:700;margin:9px 0 4px;font-size:.76rem;color:#33475a}
   .chk{display:flex;align-items:center;gap:6px;margin:2px 0} .chk input{accent-color:var(--nav)}
@@ -54,13 +55,14 @@
     <div class="lbl">Colorear humedales por</div>
     <div class="btns" id="btns"></div>
     <div class="lbl">Mapa base</div>
-    <div class="base"><button data-b="claro" class="on">Claro</button><button data-b="sat">Satélite</button></div>
-    <input type="range" class="op" id="baseop" min="0" max="100" value="100" title="Transparencia del mapa base">
+    <div class="base"><button data-b="claro" class="on" aria-pressed="true">Claro</button><button data-b="sat" aria-pressed="false">Satélite</button></div>
+    <input type="range" class="op" id="baseop" min="0" max="100" value="100" title="Transparencia del mapa base" aria-label="Transparencia del mapa base">
     <div class="lbl">Datos y metadatos</div>
     <div class="dl">
       <a href="/humedales_tabla.csv" download>⬇ Tabla de humedales (CSV, 2.916)</a>
       <a href="/humedales_poly.geojson" download>⬇ Humedales (GeoJSON)</a>
       <a href="/cuencas.geojson" download>⬇ Cuencas (GeoJSON)</a>
+      <a href="/humedales_urbanos.geojson" download>⬇ Humedales urbanos Ley 21.202 (GeoJSON)</a>
     </div>
   </div>
 </div>
@@ -75,6 +77,14 @@ const CUENCAS=[["Rio Aconcagua","#4e79a7"],["Costeras entre Aconcagua y Maipo","
   ["Rio Maipo","#76b7b2"],["Rio Choapa","#edc948"],["Costeras entre R.Choapa y R.Quilimari","#ff9da7"],
   ["Rio QuiLimari","#9c755f"],["Costeras Quilimari-Petorca","#bab0ac"],
   ["Costeras entre  Maipo y Rapel","#86bcb6"],["Rio Rapel","#d37295"]];
+// Nombres BNA solo para presentación (corrección ortográfica); los cruces
+// internos (coloreo, atributo cu) siguen usando las claves crudas de CUENCAS.
+const CUENCA_LBL={"Rio Aconcagua":"Río Aconcagua","Rio Petorca":"Río Petorca","Rio Ligua":"Río Ligua",
+  "Rio Maipo":"Río Maipo","Rio Choapa":"Río Choapa","Rio Rapel":"Río Rapel","Rio QuiLimari":"Río Quilimarí",
+  "Costeras entre R.Choapa y R.Quilimari":"Costeras entre R. Choapa y R. Quilimarí",
+  "Costeras Quilimari-Petorca":"Costeras Quilimarí-Petorca",
+  "Costeras entre  Maipo y Rapel":"Costeras entre Maipo y Rapel"};
+const cuLbl=n=>CUENCA_LBL[n]||n;
 const VARS={
   p:{label:"Percentil",type:"grad",stops:[[50,"#ffffcc"],[70,"#a1dab4"],[85,"#41b6c4"],[95,"#2c7fb8"],[100,"#253494"]],
      fmt:v=>"P"+v.toFixed(0),leg:"Percentil empírico del acumulado (1995–2025)"},
@@ -87,8 +97,12 @@ const VARS={
 };
 const VORDER=["p","cl","s","su"];
 let cvar="p";
-const LAYERS=[["region","Región de Valparaíso",true,100],["cuencas","Cuencas (BNA)",false,35],["poly","Humedales",true,88]];
-const OPTARGET={region:["region-line","line-opacity"],cuencas:["cuencas-fill","fill-opacity"],poly:["hpoly","fill-opacity"]};
+const URB_CLASES=[["sin_solape","Sin solape con inventario 2013 (nuevo)","#e6550d"],
+  ["con_solape","Con solape con inventario 2013","#3182bd"]];
+const LAYERS=[["cuencas","Cuencas (BNA)",false,35],["region","Región de Valparaíso",true,100],
+  ["poly","Humedales",true,88],["urbanos","Humedales urbanos (Ley 21.202)",true,85]];
+const OPTARGET={region:["region-line","line-opacity"],cuencas:["cuencas-fill","fill-opacity"],
+  poly:["hpoly","fill-opacity"],urbanos:["hurb-fill","fill-opacity"]};
 
 const map=new maplibregl.Map({container:"map",style:{version:8,sources:{
   claro:{type:"raster",tileSize:256,attribution:"© OpenStreetMap · © CARTO",
@@ -105,33 +119,45 @@ function colorExpr(k){const V=VARS[k];
   const e=["match",["coalesce",["get",k],"?"]];V.cats.forEach(([v,c])=>e.push(v,c));e.push("#bbb");return e;}
 function setColor(k){cvar=k;
   if(map.getLayer("hpoly"))map.setPaintProperty("hpoly","fill-color",colorExpr(k));
-  document.querySelectorAll("#btns button").forEach(b=>b.classList.toggle("on",b.dataset.k===k));
+  document.querySelectorAll("#btns button").forEach(b=>{const on=b.dataset.k===k;
+    b.classList.toggle("on",on);b.setAttribute("aria-pressed",on);});
   drawLegend();}
 function drawLegend(){const V=VARS[cvar];let h="<b>"+V.leg+"</b>";
   if(V.type==="cat"){V.cats.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c}"></span>${v}</div>`);
     h+=`<div class="row"><span class="sw" style="background:#bbb"></span>sin dato</div>`;}
   else V.stops.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c}"></span>${V.fmt(v)}</div>`);
   if(document.querySelector('input[data-l="cuencas"]').checked){h+='<b style="margin-top:8px">Cuencas</b>';
-    CUENCAS.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c};opacity:.6"></span>${v}</div>`);}
+    CUENCAS.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c};opacity:.6"></span>${cuLbl(v)}</div>`);}
+  if(document.querySelector('input[data-l="urbanos"]').checked){h+='<b style="margin-top:8px">Humedales urbanos (Ley 21.202)</b>';
+    URB_CLASES.forEach(([,txt,c])=>h+=`<div class="row"><span class="sw" style="background:${c}"></span>${txt}</div>`);
+    h+='<div style="font-size:.7rem;color:#5a6b7a;margin-top:2px">18 humedales reconocidos; % exacto de solape en la ficha de cada uno</div>';}
   document.getElementById("legendbody").innerHTML=h;}
 
 function setOpacity(id,val){const[l,pr]=OPTARGET[id];if(map.getLayer(l))map.setPaintProperty(l,pr,val/100);}
 function setLayer(id,on){const v=on?"visible":"none";
-  const ids={region:["region-line"],cuencas:["cuencas-fill","cuencas-line"],poly:["hpoly","hpoly-line"]}[id];
+  const ids={region:["region-line"],cuencas:["cuencas-fill","cuencas-line"],poly:["hpoly","hpoly-line"],
+    urbanos:["hurb-fill","hurb-line"]}[id];
   ids.forEach(l=>{if(map.getLayer(l))map.setLayoutProperty(l,"visibility",v);});
-  if(id==="cuencas")drawLegend();}
+  if(id==="cuencas"||id==="urbanos")drawLegend();}
 
 // minimizar tarjetas
-function bindMin(cardId,btnId){const card=document.getElementById(cardId),btn=document.getElementById(btnId);
+function bindMin(cardId,btnId,name){const card=document.getElementById(cardId),btn=document.getElementById(btnId);
   const head=card.querySelector(".head");
-  head.onclick=e=>{if(e.target.tagName==="INPUT")return;card.classList.toggle("collapsed");
-    btn.textContent=card.classList.contains("collapsed")?"+":"–";};}
-bindMin("panel","pmin"); bindMin("legend","lmin");
+  const sync=()=>{const c=card.classList.contains("collapsed");btn.textContent=c?"+":"–";
+    btn.setAttribute("aria-expanded",!c);btn.setAttribute("aria-label",(c?"Expandir ":"Minimizar ")+name);};
+  head.onclick=e=>{if(e.target.tagName==="INPUT")return;card.classList.toggle("collapsed");sync();};sync();}
+bindMin("panel","pmin","el panel de controles"); bindMin("legend","lmin","la leyenda");
+// en pantallas angostas o bajas la leyenda parte minimizada para no tapar el panel
+if(matchMedia("(max-width:480px),(max-height:520px)").matches){
+  document.getElementById("legend").classList.add("collapsed");
+  document.getElementById("lmin").textContent="+";
+  document.getElementById("lmin").setAttribute("aria-expanded","false");
+  document.getElementById("lmin").setAttribute("aria-label","Expandir la leyenda");}
 
 const lay=document.getElementById("layers");
 LAYERS.forEach(([id,txt,on,op])=>{const w=document.createElement("div");w.className="lyr";
   w.innerHTML=`<label class="chk"><input type="checkbox" data-l="${id}" ${on?"checked":""}> ${txt}</label>`+
-    `<input type="range" class="op" data-op="${id}" min="0" max="100" value="${op}" title="Transparencia">`;
+    `<input type="range" class="op" data-op="${id}" min="0" max="100" value="${op}" title="Transparencia" aria-label="Transparencia de ${txt}">`;
   w.querySelector('input[type=checkbox]').onchange=e=>setLayer(id,e.target.checked);
   w.querySelector('input[type=range]').oninput=e=>setOpacity(id,+e.target.value);
   lay.appendChild(w);});
@@ -139,36 +165,59 @@ const bt=document.getElementById("btns");
 VORDER.forEach(k=>{const b=document.createElement("button");b.textContent=VARS[k].label;b.dataset.k=k;b.onclick=()=>setColor(k);bt.appendChild(b);});
 document.querySelectorAll(".base button").forEach(b=>b.onclick=()=>{const sat=b.dataset.b==="sat";
   map.setLayoutProperty("sat","visibility",sat?"visible":"none");map.setLayoutProperty("claro","visibility",sat?"none":"visible");
-  document.querySelectorAll(".base button").forEach(x=>x.classList.toggle("on",x===b));});
+  document.querySelectorAll(".base button").forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-pressed",x===b);});});
 document.getElementById("baseop").oninput=e=>{const o=+e.target.value/100;
   map.setPaintProperty("claro","raster-opacity",o);map.setPaintProperty("sat","raster-opacity",o);};
 
 map.on("load",()=>{
-  map.addSource("region",{type:"geojson",data:"/region_rv.geojson"});
-  map.addLayer({id:"region-line",type:"line",source:"region",paint:{"line-color":"#0b3d66","line-width":1.6}});
   map.addSource("cu",{type:"geojson",data:"/cuencas.geojson"});
   map.addLayer({id:"cuencas-fill",type:"fill",source:"cu",layout:{visibility:"none"},
     paint:{"fill-color":(()=>{const e=["match",["get","NOM_CUEN"]];CUENCAS.forEach(([v,c])=>e.push(v,c));e.push("#bbb");return e;})(),"fill-opacity":0.35}});
   map.addLayer({id:"cuencas-line",type:"line",source:"cu",layout:{visibility:"none"},paint:{"line-color":"#33475a","line-width":0.7,"line-opacity":0.7}});
+  map.addSource("region",{type:"geojson",data:"/region_rv.geojson"});
+  map.addLayer({id:"region-line",type:"line",source:"region",paint:{"line-color":"#0b3d66","line-width":1.6}});
   map.addSource("hp",{type:"geojson",data:"/humedales_poly.geojson"});
   map.addLayer({id:"hpoly",type:"fill",source:"hp",paint:{"fill-color":colorExpr("p"),"fill-opacity":0.88,"fill-outline-color":"#12303f"}});
   map.addLayer({id:"hpoly-line",type:"line",source:"hp",paint:{"line-color":"#12303f","line-width":0.35}});
   setColor("p");
+
+  map.addSource("hu",{type:"geojson",data:"/humedales_urbanos.geojson",tolerance:0});
+  map.addLayer({id:"hurb-fill",type:"fill",source:"hu",paint:{
+    "fill-color":["match",["get","clase"],...URB_CLASES.flatMap(([v,,c])=>[v,c]),"#999"],
+    "fill-opacity":0.85}});
+  map.addLayer({id:"hurb-line",type:"line",source:"hu",paint:{
+    "line-color":"#12303f","line-width":1.6,"line-dasharray":[2,1]}});
   const pop=new maplibregl.Popup({closeButton:true,maxWidth:"280px"});
   map.on("click","hpoly",e=>{const p=e.features[0].properties;
     pop.setLngLat(e.lngLat).setHTML(
-      `<b>${p.n}</b><br>${p.c}${p.cu?" · Cuenca "+p.cu:""}<br>`+
+      `<b>${p.n}</b><br>${p.c}${p.cu?" · Cuenca "+cuLbl(p.cu):""}<br>`+
       (p.t2?`Tipo de humedal: <b>${p.t2}</b><br>`:"")+
       `Percentil: <b>P${(+p.p).toFixed(0)}</b> · Acumulado ${(+p.mm).toFixed(0)} mm<br>`+
       `Amenaza de inundación: <b>${p.cl}</b><br>`+
       `Susceptibilidad ${(+p.s).toFixed(2)} · Retención suelo ${p.su!=null?(+p.su).toFixed(2):"s/d"}`+
-      (p.se?`<br>Serie de suelo: <b>${p.se}</b>`:"")).addTo(map);});
+      (p.se&&p.se!=="NO SUELOS"?`<br>Serie de suelo: <b>${p.se}</b>`:"")).addTo(map);});
   map.on("mouseenter","hpoly",()=>map.getCanvas().style.cursor="pointer");
   map.on("mouseleave","hpoly",()=>map.getCanvas().style.cursor="");
+
+  map.on("click","hurb-fill",e=>{const p=e.features[0].properties;
+    const bajaConfianza=String(p.cg).startsWith("baja");
+    pop.setLngLat(e.lngLat).setHTML(
+      `<b>${p.n}</b> · Humedal Urbano (Ley 21.202)<br>${p.c} · ${(+p.area_ha).toFixed(1)} ha<br>`+
+      `Clasificación: <b>${p.tc==="natural"?"Natural":"Sin dato"}</b><br>`+
+      (p.n2013>0
+        ? `Solapa ${(+p.pct2013).toFixed(0)}% de su área con ${p.n2013} polígono(s) del inventario 2013`+
+          (p.nom2013?` (${p.nom2013})`:"")+"<br>"
+        : `<b>Sin solape</b> con el inventario 2013 — no está representado en la capa "Humedales"<br>`)+
+      (bajaConfianza
+        ? `<span style="color:#c0392b">⚠ Confianza geométrica baja — límite pendiente de revisión, ver openspec/changes/humedales-urbanos-mma</span>`
+        : `Confianza geométrica: ${p.cg}`)
+    ).addTo(map);});
+  map.on("mouseenter","hurb-fill",()=>map.getCanvas().style.cursor="pointer");
+  map.on("mouseleave","hurb-fill",()=>map.getCanvas().style.cursor="");
   // nombre de cuenca al pasar el cursor
   const cupop=new maplibregl.Popup({closeButton:false,closeOnClick:false,maxWidth:"240px"});
   map.on("mousemove","cuencas-fill",e=>{map.getCanvas().style.cursor="help";
-    cupop.setLngLat(e.lngLat).setHTML(`<b>Cuenca:</b> ${e.features[0].properties.NOM_CUEN}`).addTo(map);});
+    cupop.setLngLat(e.lngLat).setHTML(`<b>Cuenca:</b> ${cuLbl(e.features[0].properties.NOM_CUEN)}`).addTo(map);});
   map.on("mouseleave","cuencas-fill",()=>{cupop.remove();map.getCanvas().style.cursor="";});
 });
 </script>
