@@ -92,12 +92,14 @@ nombres BNA crudos en leyenda/ficha/hover; a11y: `#pmin`/`#lmin` con nombre
       posición sobre el zoom, clic resetea `bearing` a 0.
 - [x] 7.2 Quitado el texto "(superponibles)" junto a la etiqueta "Capas"
       del panel de controles.
-- [x] 7.3 Título del eje Z del modelo 3D (`public/modelo-3d.html`,
-      "Elevación (m)" → "Elevación en ascendente vertical") — no hay una
-      propuesta OpenSpec dedicada a esa página, se documenta aquí por ser
-      parte del mismo lote de ajustes de navegación/ejes. Editado
-      directamente en el HTML desplegado (no se regeneró con el script
-      generador, ver advertencia en `humedales-urbanos-amenaza` tarea 8).
+- [x] 7.3 Título del eje Z del modelo 3D (`public/modelo-3d.html`) —
+      cambiado primero a "Elevación en ascendente vertical" (malinterpretado
+      de la instrucción original), corregido de inmediato de vuelta a
+      "Elevación (m)" tras aclaración de Camila. No hay una propuesta
+      OpenSpec dedicada a esa página; se documenta aquí por ser parte del
+      mismo lote de ajustes de navegación/ejes. Editado directamente en el
+      HTML desplegado ambas veces (no se regeneró con el script generador,
+      ver advertencia en `humedales-urbanos-amenaza` tarea 8).
 - [x] 7.4 Desplegado y verificado en el sitio en vivo (commit `1b70950`):
       brújula presente, texto "(superponibles)" ausente, título del eje Z
       actualizado.
