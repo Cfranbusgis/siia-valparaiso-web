@@ -35,6 +35,12 @@
   .base button{flex:1;border:1px solid #cdd7e0;background:#fff;border-radius:8px;padding:4px;font-size:.74rem;cursor:pointer}
   .base button.on{background:#12303f;color:#fff;border-color:#12303f}
   .row{display:flex;align-items:center;gap:7px;margin:2px 0}
+  .leg-group{margin-bottom:8px}
+  .leg-group:last-child{margin-bottom:0}
+  .lg-head{display:flex;align-items:center;justify-content:space-between;gap:6px;cursor:pointer;user-select:none}
+  .lg-min{border:none;background:#eef2f6;color:var(--nav);border-radius:5px;width:18px;height:18px;
+    font-size:.85rem;line-height:1;cursor:pointer;flex:none}
+  .lg-collapsed .lg-body{display:none}
   .sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.15);flex:none}
   .maplibregl-popup-content{font-size:.8rem;line-height:1.4;padding:10px 12px;border-radius:8px}
   .maplibregl-popup-content b{color:var(--nav)}
@@ -52,7 +58,7 @@
   <div class="body">
     <div class="lbl">Capas (superponibles)</div>
     <div id="layers"></div>
-    <div class="lbl">Colorear humedales por</div>
+    <div class="lbl">Identificación de humedales</div>
     <div class="btns" id="btns"></div>
     <div class="lbl">Mapa base</div>
     <div class="base"><button data-b="claro" class="on" aria-pressed="true">Claro</button><button data-b="sat" aria-pressed="false">Satélite</button></div>
@@ -122,16 +128,34 @@ function setColor(k){cvar=k;
   document.querySelectorAll("#btns button").forEach(b=>{const on=b.dataset.k===k;
     b.classList.toggle("on",on);b.setAttribute("aria-pressed",on);});
   drawLegend();}
-function drawLegend(){const V=VARS[cvar];let h="<b>"+V.leg+"</b>";
-  if(V.type==="cat"){V.cats.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c}"></span>${v}</div>`);
-    h+=`<div class="row"><span class="sw" style="background:#bbb"></span>sin dato</div>`;}
-  else V.stops.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c}"></span>${V.fmt(v)}</div>`);
-  if(document.querySelector('input[data-l="cuencas"]').checked){h+='<b style="margin-top:8px">Cuencas</b>';
-    CUENCAS.forEach(([v,c])=>h+=`<div class="row"><span class="sw" style="background:${c};opacity:.6"></span>${cuLbl(v)}</div>`);}
-  if(document.querySelector('input[data-l="urbanos"]').checked){h+='<b style="margin-top:8px">Humedales urbanos (Ley 21.202)</b>';
-    URB_CLASES.forEach(([,txt,c])=>h+=`<div class="row"><span class="sw" style="background:${c}"></span>${txt}</div>`);
-    h+='<div style="font-size:.7rem;color:#5a6b7a;margin-top:2px">18 humedales reconocidos; % exacto de solape en la ficha de cada uno</div>';}
-  document.getElementById("legendbody").innerHTML=h;}
+const legendCollapsed={variable:false,cuencas:false,urbanos:false};
+function legGroup(key,title,bodyHtml){
+  const c=legendCollapsed[key];
+  return `<div class="leg-group ${c?"lg-collapsed":""}" data-lg="${key}">`+
+    `<div class="lg-head"><b>${title}</b><button class="lg-min" aria-expanded="${!c}" `+
+    `aria-label="${c?"Expandir":"Minimizar"} ${title}">${c?"+":"–"}</button></div>`+
+    `<div class="lg-body">${bodyHtml}</div></div>`;}
+function drawLegend(){const V=VARS[cvar];let body="";
+  if(V.type==="cat"){V.cats.forEach(([v,c])=>body+=`<div class="row"><span class="sw" style="background:${c}"></span>${v}</div>`);
+    body+=`<div class="row"><span class="sw" style="background:#bbb"></span>sin dato</div>`;}
+  else V.stops.forEach(([v,c])=>body+=`<div class="row"><span class="sw" style="background:${c}"></span>${V.fmt(v)}</div>`);
+  let h=legGroup("variable",V.leg,body);
+  if(document.querySelector('input[data-l="cuencas"]').checked){
+    let cb="";CUENCAS.forEach(([v,c])=>cb+=`<div class="row"><span class="sw" style="background:${c};opacity:.6"></span>${cuLbl(v)}</div>`);
+    h+=legGroup("cuencas","Cuencas",cb);}
+  if(document.querySelector('input[data-l="urbanos"]').checked){
+    let ub="";URB_CLASES.forEach(([,txt,c])=>ub+=`<div class="row"><span class="sw" style="background:${c}"></span>${txt}</div>`);
+    ub+='<div style="font-size:.7rem;color:#5a6b7a;margin-top:2px">18 humedales reconocidos; % exacto de solape en la ficha de cada uno</div>';
+    h+=legGroup("urbanos","Humedales urbanos (Ley 21.202)",ub);}
+  document.getElementById("legendbody").innerHTML=h;
+  document.querySelectorAll(".leg-group").forEach(g=>{
+    g.querySelector(".lg-head").onclick=()=>{
+      const key=g.dataset.lg;legendCollapsed[key]=!legendCollapsed[key];
+      const c=legendCollapsed[key];g.classList.toggle("lg-collapsed",c);
+      const btn=g.querySelector(".lg-min");btn.textContent=c?"+":"–";
+      btn.setAttribute("aria-expanded",!c);
+      btn.setAttribute("aria-label",(c?"Expandir ":"Minimizar ")+g.querySelector(".lg-head b").textContent);};
+  });}
 
 function setOpacity(id,val){const[l,pr]=OPTARGET[id];if(map.getLayer(l))map.setPaintProperty(l,pr,val/100);}
 function setLayer(id,on){const v=on?"visible":"none";

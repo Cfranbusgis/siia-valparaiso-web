@@ -59,5 +59,16 @@ nombres BNA crudos en leyenda/ficha/hover; a11y: `#pmin`/`#lmin` con nombre
       orden del checkbox, z-order real de las capas, y que ambos toggles
       siguen funcionando tras el reordenamiento.
 
-## 5. Entrega
-- [x] 5.1 Revisión del diff por Camila; commit + push (aprobado).
+## 5. Ajustes menores de texto y leyenda
+- [x] 5.1 Etiqueta "Colorear humedales por" → "Identificación de humedales".
+- [x] 5.2 Leyenda con grupos colapsables independientes (variable activa,
+      Cuencas, Humedales urbanos): cada uno con su propio botón "–"/"+",
+      estado preservado al cambiar de variable o al redibujar. Verificado
+      con Playwright: 3 grupos presentes, colapsar uno no afecta a los
+      demás, el estado persiste entre redibujados, se puede reexpandir.
+
+## 6. Entrega
+- [x] 6.1 Revisión del diff por Camila; commit + push (aprobado).
+- [ ] 6.2 Ajustes de la sección 5: revisión y commit pendiente (no
+      pusheado — desde ahora el despliegue a Railway se hace con
+      `railway up` manual, ver README/CONTRIBUTING actualizar).
