@@ -141,6 +141,17 @@ independiente de la capa de 2.916 humedales, visible por defecto, con:
   Reñaca) dentro de esta propuesta — queda como tarea de re-auditoría
   explícita (tasks.md 5.4).
 
+## Extensión: inventario completo (21 registros, natural vs. artificial)
+
+Ver tasks.md sección 9. Nace de un pedido más amplio (inventario nacional de
+humedales urbanos, proyecto separado en el Escritorio): en vez de excluir
+artificial/mixto como hace la capa del mapa interactivo, el inventario de
+Valparaíso ahora tiene geometría para los 21 registros completos, con
+`tipo_final` (natural/artificial/mixto/sin_dato) siempre presente. Entregable
+nuevo: `data/humedales_urbanos_valpo.shp` en CRS nativo (UTM 19S/EPSG:32719).
+La capa del mapa interactivo (`public/humedales_urbanos.geojson`, 18
+registros) no se tocó — sigue siendo un producto distinto y ya aprobado.
+
 ## Results
 
 - `data/humedales_urbanos_valpo.csv` — 21 filas (todas las "Reconocido"),

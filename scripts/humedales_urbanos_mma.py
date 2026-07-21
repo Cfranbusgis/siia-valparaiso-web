@@ -18,7 +18,7 @@ Alcance (decidido con Camila, 20-jul-2026):
     * vacio o "No señala"      -> tipo_final = "sin dato"   (SE INCLUYE,
       marcado; no se asume natural ni artificial sin evidencia)
     * menciona "artificial" Y "natural" a la vez -> tipo_final =
-      "mixto (excluido)" (registro describe mas de un poligono con tipos
+      "mixto" (registro describe mas de un poligono con tipos
       distintos en el mismo tramite -- ej. "Laguna El Criquet, humedal
       artificial...; Quebrada Honda, humedal natural..."; sin geometria no
       hay forma confiable de aislar solo la parte natural, se excluye el
@@ -108,7 +108,11 @@ def main():
     df["tipo_final"] = "natural"
     df.loc[vacio, "tipo_final"] = "sin dato"
     df.loc[tiene_artificial & ~mixto & ~vacio, "tipo_final"] = "artificial"
-    df.loc[mixto, "tipo_final"] = "mixto (excluido)"
+    df.loc[mixto, "tipo_final"] = "mixto"
+    # incluir_capa: subconjunto usado por la capa "humedales nuevos" del mapa
+    # interactivo (excluye artificial/mixto ahi); el inventario completo
+    # (humedales_urbanos_valpo.csv) sí conserva los 21 registros, todos los
+    # tipos -- ver openspec/changes/humedales-urbanos-mma/proposal.md.
     df["incluir_capa"] = df["tipo_final"].isin(["natural", "sin dato"])
 
     OUT.parent.mkdir(exist_ok=True)
