@@ -1,6 +1,20 @@
 # -*- coding: utf-8 -*-
 """Genera el informe HTML autocontenido (Sistema Regional de Inteligencia Ambiental).
 
+*** ADVERTENCIA (21-jul-2026) ***
+Este script quedó desactualizado respecto de public/index.html hace muchos
+commits: le faltan por completo las secciones "Susceptibilidad y amenaza de
+inundación", "Validación observacional y corrección de sesgo", "CR2MET",
+"Auditoría del análisis", "Alcances de mejora" y "Referencias", que en algún
+momento se agregaron directamente a public/index.html (a mano o con otra
+versión de este script) sin retroalimentar esta plantilla. Volver a correr
+este script + assemble_web.py SOBRESCRIBE public/index.html completo y borra
+esas secciones — ya ocurrió una vez (ver incidente documentado en
+openspec/changes/humedales-urbanos-amenaza/tasks.md, sección 8).
+NO USAR para regenerar el informe hasta reconciliar esta plantilla con el
+contenido real de public/index.html. Para cambios puntuales, editar
+public/index.html directamente.
+
 Dirección editorial de tipo publicación científica: identidad de sistema
 operacional (no dashboard), jerarquía de indicadores, figura conceptual de la
 arquitectura, figuras numeradas, tarjeta de nivel de confianza, secciones de

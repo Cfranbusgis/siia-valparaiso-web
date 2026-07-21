@@ -47,6 +47,10 @@ BACKLINK = """
 
 
 def build_index() -> None:
+    # ADVERTENCIA (21-jul-2026): build_report.py esta desactualizado y no
+    # reproduce varias secciones que hoy existen en public/index.html (ver
+    # advertencia al inicio de ese script). Correr esto sobrescribe
+    # public/index.html completo. No usar hasta reconciliar.
     fragment = REPORT.read_text(encoding="utf-8")
     # el informe referencia el modelo 3D por nombre de archivo: convertir en enlace
     fragment = fragment.replace(
